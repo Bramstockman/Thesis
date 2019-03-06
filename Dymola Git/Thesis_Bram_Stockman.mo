@@ -1159,7 +1159,7 @@ Corrected wrong value in implementation.
   model RBC
     package Medium = IDEAS.Media.Water;
     UpscaleCase900 upscaleCase900_HVAC
-      annotation (Placement(transformation(extent={{-34,-60},{-4,-40}})));
+      annotation (Placement(transformation(extent={{-30,-128},{0,-108}})));
     IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe embeddedPipe(
       redeclare package Medium = Medium,
       m_flow_nominal=6,
@@ -1169,12 +1169,7 @@ Corrected wrong value in implementation.
       annotation (Placement(transformation(
           extent={{-10,-10},{10,10}},
           rotation=180,
-          origin={40,-34})));
-    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem(
-      m_flow_nominal=6,
-      redeclare package Medium = Medium,
-      tau=0)
-      annotation (Placement(transformation(extent={{52,-44},{66,-56}})));
+          origin={46,-70})));
     IDEAS.Fluid.Movers.FlowControlled_m_flow fan1(
       redeclare package Medium = Medium,
       addPowerToMedium=false,
@@ -1187,7 +1182,7 @@ Corrected wrong value in implementation.
       use_inputFilter=false)
       annotation (Placement(transformation(extent={{-8,-8},{8,8}},
           rotation=270,
-          origin={68,-6})));
+          origin={76,-46})));
     IDEAS.Fluid.MixingVolumes.MixingVolume vol(
       redeclare package Medium = Medium,
       nPorts=6,
@@ -1207,7 +1202,7 @@ Corrected wrong value in implementation.
           transformation(
           extent={{-8,-8},{8,8}},
           rotation=270,
-          origin={68,18})));
+          origin={76,20})));
     IDEAS.Fluid.Movers.FlowControlled_m_flow fan2(
       redeclare package Medium = Medium,
       addPowerToMedium=false,
@@ -1237,8 +1232,8 @@ Corrected wrong value in implementation.
           rotation=270,
           origin={-20,42})));
 
-    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium =
-          Medium, borFieDat=
+    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium
+        = Medium, borFieDat=
           IDEAS.Fluid.Geothermal.Borefields.Data.Borefield.Example(
             filDat=IDEAS.Fluid.Geothermal.Borefields.Data.Filling.Bentonite(
               kFil=0.6,
@@ -1349,27 +1344,62 @@ Corrected wrong value in implementation.
           extent={{-7,-7},{7,7}},
           rotation=0,
           origin={-103,-5})));
-    Modelica.Blocks.Sources.Constant const(k=6)
-      annotation (Placement(transformation(extent={{84,-48},{104,-28}})));
-    UpscaleCase900 upscaleCase900_NoHVAC
-      annotation (Placement(transformation(extent={{-34,-94},{-4,-74}})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0)
+      annotation (Placement(transformation(extent={{74,-64},{60,-76}})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem1(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0)
+      annotation (Placement(transformation(extent={{34,-64},{20,-76}})));
+    IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveMotor
+                                                threeWayValveMotor(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      m_flow_nominal=6,
+      allowFlowReversal=true)                       annotation (Placement(
+          transformation(
+          extent={{-8,8},{8,-8}},
+          rotation=270,
+          origin={20,-22})));
+    IDEAS.Controls.Continuous.LimPID conPID(
+      controllerType=Modelica.Blocks.Types.SimpleController.PI,
+      k=1,
+      yMax=1,
+      yMin=0,
+      xi_start=1,
+      Ti=100)
+      annotation (Placement(transformation(extent={{140,-130},{154,-116}})));
+    Modelica.Blocks.Sources.Constant const(k=273.15 + 30)
+      annotation (Placement(transformation(extent={{94,-132},{112,-114}})));
+    IDEAS.Controls.Continuous.LimPID conPID1(
+      controllerType=Modelica.Blocks.Types.SimpleController.PI,
+      xi_start=1,
+      Ti=10,
+      k=1,
+      yMax=1,
+      yMin=0.1)
+      annotation (Placement(transformation(extent={{140,-90},{154,-76}})));
+    Modelica.Blocks.Sources.Constant const2(k=273.15 + 25)
+      annotation (Placement(transformation(extent={{92,-92},{110,-74}})));
+    Modelica.Blocks.Math.Gain gain2(k=6) annotation (Placement(transformation(
+          extent={{-7,-7},{7,7}},
+          rotation=90,
+          origin={159,-55})));
   equation
     connect(upscaleCase900_HVAC.heatPortEmb, embeddedPipe.heatPortEmb)
-      annotation (Line(points={{-4,-44},{40,-44}}, color={191,0,0}));
-    connect(senTem.port_b, fan1.port_b) annotation (Line(points={{66,-50},{76,
-            -50},{76,-36},{68,-36},{68,-14}}, color={0,127,255}));
-    connect(vol.ports[2], embeddedPipe.port_b) annotation (Line(points={{40.4,56},
-            {22,56},{22,-34},{30,-34}}, color={0,127,255}));
-    connect(fan2.port_b, vol.ports[3])
-      annotation (Line(points={{14,52},{41.4667,52},{41.4667,56}},
+      annotation (Line(points={{0,-112},{46,-112},{46,-80}}, color={191,0,0}));
+    connect(fan2.port_b, vol.ports[2])
+      annotation (Line(points={{14,52},{40.4,52},{40.4,56}},
                                                          color={0,127,255}));
     connect(fan2.port_a, heaPum.port_b1)
       annotation (Line(points={{-2,52},{-14,52}}, color={0,127,255}));
-    connect(heaPum.port_a1, vol.ports[4])
-      annotation (Line(points={{-14,32},{42.5333,32},{42.5333,56}},
+    connect(heaPum.port_a1, vol.ports[3])
+      annotation (Line(points={{-14,32},{41.4667,32},{41.4667,56}},
                                                           color={0,127,255}));
-    connect(hex.port_a2, embeddedPipe.port_b)
-      annotation (Line(points={{14,-2},{14,-34},{30,-34}}, color={0,127,255}));
     connect(borFie.port_a, hex.port_b1)
       annotation (Line(points={{-56,-28},{2,-28},{2,-2}}, color={0,127,255}));
     connect(heaPum.port_b2, hex.port_b1) annotation (Line(points={{-26,32},{-26,
@@ -1379,31 +1409,29 @@ Corrected wrong value in implementation.
                                                    color={0,127,255}));
     connect(fan3.port_a, borFie.port_b) annotation (Line(points={{-78,-14},{-78,
             -28},{-76,-28}}, color={0,127,255}));
-    connect(senTem.port_a, embeddedPipe.port_a) annotation (Line(points={{52,
-            -50},{52,-34},{50,-34}}, color={0,127,255}));
     connect(threeWayValveSwitch.port_b, fan3.port_b)
       annotation (Line(points={{-78,10},{-78,4}}, color={0,127,255}));
     connect(threeWayValveSwitch.port_a1, heaPum.port_a2) annotation (Line(
           points={{-78,26},{-78,52},{-26,52}}, color={0,127,255}));
     connect(threeWayValveSwitch.port_a2, hex.port_a1)
       annotation (Line(points={{-70,18},{2,18}}, color={0,127,255}));
-    connect(threeWayValveSwitch1.port_a1, vol.ports[5])
-      annotation (Line(points={{68,26},{68,56},{43.6,56}}, color={0,127,255}));
+    connect(threeWayValveSwitch1.port_a1, vol.ports[4])
+      annotation (Line(points={{76,28},{76,56},{42.5333,56}},
+                                                           color={0,127,255}));
     connect(temperatureSensor.port, vol.heatPort) annotation (Line(points={{34,
             87},{28,87},{28,63},{34,63}}, color={191,0,0}));
-    connect(threeWayValveSwitch1.port_b, fan1.port_a)
-      annotation (Line(points={{68,10},{68,2}}, color={0,127,255}));
     connect(threeWayValveSwitch1.port_a2, hex.port_b2)
-      annotation (Line(points={{60,18},{14,18}}, color={0,127,255}));
-    connect(bou1.ports[1], vol.ports[6]) annotation (Line(points={{67,64},{67,
-            56},{44.6667,56}}, color={0,127,255}));
+      annotation (Line(points={{68,20},{38,20},{38,18},{14,18}},
+                                                 color={0,127,255}));
+    connect(bou1.ports[1], vol.ports[5]) annotation (Line(points={{67,64},{67,
+            56},{43.6,56}},    color={0,127,255}));
     connect(threeWayValveSwitch.switch, threeWayValveSwitch1.switch)
-      annotation (Line(points={{-84.4,18},{-120,18},{-120,120},{84,120},{84,18},
-            {74.4,18}}, color={255,0,255}));
+      annotation (Line(points={{-84.4,18},{-116,18},{-116,120},{88,120},{88,20},
+            {82.4,20}}, color={255,0,255}));
     connect(realToBoolean.y, not1.u)
       annotation (Line(points={{-197.4,120},{-193.2,120}}, color={255,0,255}));
-    connect(not1.y, threeWayValveSwitch1.switch) annotation (Line(points={{
-            -179.4,120},{84,120},{84,18},{74.4,18}}, color={255,0,255}));
+    connect(not1.y, threeWayValveSwitch1.switch) annotation (Line(points={{-179.4,
+            120},{88,120},{88,20},{82.4,20}},        color={255,0,255}));
     connect(not2.u, hysteresis.y)
       annotation (Line(points={{166.6,65},{154.9,65}}, color={255,0,255}));
     connect(temperatureSensor.T, hysteresis.u) annotation (Line(points={{48,87},
@@ -1414,8 +1442,9 @@ Corrected wrong value in implementation.
       annotation (Line(points={{158.7,27},{168.6,27}}, color={255,0,255}));
     connect(and1.u2, not3.y) annotation (Line(points={{142.6,21.4},{126.65,21.4},
             {126.65,13},{118.7,13}}, color={255,0,255}));
-    connect(not3.u, threeWayValveSwitch1.switch) annotation (Line(points={{
-            102.6,13},{84,13},{84,18},{74.4,18}}, color={255,0,255}));
+    connect(not3.u, threeWayValveSwitch1.switch) annotation (Line(points={{102.6,
+            13},{96,13},{96,14},{88,14},{88,20},{82.4,20}},
+                                                  color={255,0,255}));
     connect(realToInteger1.y, heaPum.stage) annotation (Line(points={{224.7,27},
             {228,27},{228,112},{-40,112},{-40,24},{-17,24},{-17,30}}, color={
             255,127,0}));
@@ -1437,11 +1466,40 @@ Corrected wrong value in implementation.
     connect(heatingCoolingSet.Setpoint, realToBoolean.u) annotation (Line(
           points={{-224.9,119.88},{-217.45,119.88},{-217.45,120},{-211.2,120}},
           color={0,0,127}));
-    connect(or1.u2, threeWayValveSwitch1.switch) annotation (Line(points={{
-            -153.4,-10.6},{-174,-10.6},{-174,120},{84,120},{84,18},{74.4,18}},
+    connect(or1.u2, threeWayValveSwitch1.switch) annotation (Line(points={{-153.4,
+            -10.6},{-170,-10.6},{-170,120},{88,120},{88,20},{82.4,20}},
           color={255,0,255}));
-    connect(fan1.m_flow_in, const.y) annotation (Line(points={{77.6,-6},{122,-6},
-            {122,-38},{105,-38}}, color={0,0,127}));
+    connect(embeddedPipe.port_a, senTem.port_b)
+      annotation (Line(points={{56,-70},{60,-70}}, color={0,127,255}));
+    connect(fan1.port_b, senTem.port_a) annotation (Line(points={{76,-54},{76,
+            -70},{74,-70}}, color={0,127,255}));
+    connect(embeddedPipe.port_b, senTem1.port_a)
+      annotation (Line(points={{36,-70},{34,-70}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_b, senTem1.port_b)
+      annotation (Line(points={{20,-30},{20,-70}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, hex.port_a2) annotation (Line(points={{
+            20,-14},{18,-14},{18,-2},{14,-2}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, vol.ports[6]) annotation (Line(points={
+            {20,-14},{22,-14},{22,56},{44.6667,56}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a2, fan1.port_a) annotation (Line(points={{
+            28,-22},{76,-22},{76,-38}}, color={0,127,255}));
+    connect(threeWayValveSwitch1.port_b, fan1.port_a)
+      annotation (Line(points={{76,12},{76,-38}}, color={0,127,255}));
+    connect(senTem.T, conPID.u_m) annotation (Line(points={{67,-76.6},{68,-76.6},
+            {68,-144},{136,-144},{136,-131.4},{147,-131.4}}, color={0,0,127}));
+    connect(conPID.u_s, const.y)
+      annotation (Line(points={{138.6,-123},{112.9,-123}}, color={0,0,127}));
+    connect(conPID1.u_s, const2.y)
+      annotation (Line(points={{138.6,-83},{110.9,-83}}, color={0,0,127}));
+    connect(senTem1.T, conPID1.u_m) annotation (Line(points={{27,-76.6},{27,
+            -106},{147,-106},{147,-91.4}}, color={0,0,127}));
+    connect(gain2.y, fan1.m_flow_in) annotation (Line(points={{159,-47.3},{88,
+            -47.3},{88,-46},{85.6,-46}}, color={0,0,127}));
+    connect(conPID1.y, gain2.u) annotation (Line(points={{154.7,-83},{154.7,-82},
+            {158,-82},{158,-74},{159,-74},{159,-63.4}}, color={0,0,127}));
+    connect(conPID.y, threeWayValveMotor.ctrl) annotation (Line(points={{154.7,
+            -123},{158,-123},{158,-154},{-36,-154},{-36,-70},{11.36,-70},{11.36,
+            -22}}, color={0,0,127}));
     annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
           coordinateSystem(preserveAspectRatio=false)));
   end RBC;
