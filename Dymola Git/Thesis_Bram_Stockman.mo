@@ -1159,7 +1159,7 @@ Corrected wrong value in implementation.
   model RBC
     package Medium = IDEAS.Media.Water;
     UpscaleCase900 upscaleCase900_HVAC
-      annotation (Placement(transformation(extent={{-30,-128},{0,-108}})));
+      annotation (Placement(transformation(extent={{-10,-140},{20,-120}})));
     IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe embeddedPipe(
       redeclare package Medium = Medium,
       m_flow_nominal=6,
@@ -1182,16 +1182,16 @@ Corrected wrong value in implementation.
       use_inputFilter=false)
       annotation (Placement(transformation(extent={{-8,-8},{8,8}},
           rotation=270,
-          origin={76,-46})));
+          origin={76,-52})));
     IDEAS.Fluid.MixingVolumes.MixingVolume vol(
       redeclare package Medium = Medium,
-      nPorts=6,
+      nPorts=5,
       V=2,
       m_flow_nominal=fan3.m_flow_nominal)
                 annotation (Placement(transformation(
-          extent={{-8,-7},{8,7}},
+          extent={{-9,-8},{9,8}},
           rotation=0,
-          origin={42,63})));
+          origin={43,64})));
     IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveSwitch
                                                 threeWayValveSwitch1(
       redeclare package Medium = Medium,
@@ -1309,7 +1309,7 @@ Corrected wrong value in implementation.
       p=150000)
       annotation (Placement(transformation(extent={{-7,-7},{7,7}},
           rotation=270,
-          origin={67,71})));
+          origin={77,77})));
     Modelica.Blocks.Logical.Hysteresis
                                      hysteresis(
       pre_y_start=false,
@@ -1364,42 +1364,79 @@ Corrected wrong value in implementation.
           transformation(
           extent={{-8,8},{8,-8}},
           rotation=270,
-          origin={20,-22})));
+          origin={20,-16})));
     IDEAS.Controls.Continuous.LimPID conPID(
       controllerType=Modelica.Blocks.Types.SimpleController.PI,
-      k=1,
       yMax=1,
       yMin=0,
       xi_start=1,
-      Ti=100)
-      annotation (Placement(transformation(extent={{140,-130},{154,-116}})));
-    Modelica.Blocks.Sources.Constant const(k=273.15 + 30)
-      annotation (Placement(transformation(extent={{94,-132},{112,-114}})));
+      Ti=100,
+      k=10)
+      annotation (Placement(transformation(extent={{172,-132},{188,-116}})));
     IDEAS.Controls.Continuous.LimPID conPID1(
       controllerType=Modelica.Blocks.Types.SimpleController.PI,
       xi_start=1,
-      Ti=10,
-      k=1,
       yMax=1,
-      yMin=0.1)
-      annotation (Placement(transformation(extent={{140,-90},{154,-76}})));
-    Modelica.Blocks.Sources.Constant const2(k=273.15 + 25)
-      annotation (Placement(transformation(extent={{92,-92},{110,-74}})));
+      yMin=0.1,
+      k=10,
+      Ti=100)
+      annotation (Placement(transformation(extent={{170,-92},{186,-76}})));
     Modelica.Blocks.Math.Gain gain2(k=6) annotation (Placement(transformation(
           extent={{-7,-7},{7,7}},
           rotation=90,
-          origin={159,-55})));
+          origin={199,-49})));
+    RunningMeanTemperature6h runningMeanTemperature6h
+      annotation (Placement(transformation(extent={{102,-94},{120,-74}})));
+    Average6h average6h
+      annotation (Placement(transformation(extent={{100,-134},{120,-114}})));
+    IDEAS.Controls.SetPoints.Table tab(table=[-8.0 + 273,30 + 273; 15 + 273,22
+           + 273])
+      annotation (Placement(transformation(extent={{136,-94},{156,-74}})));
+    IDEAS.Controls.SetPoints.Table tab1(table=[-8.0 + 273,25 + 273; 15 + 273,17
+           + 273])
+      annotation (Placement(transformation(extent={{136,-134},{156,-114}})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem2(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0)
+      annotation (Placement(transformation(extent={{58,62},{72,50}})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem3(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0)
+      annotation (Placement(transformation(extent={{-7,6},{7,-6}},
+          rotation=270,
+          origin={77,-4})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem4(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0)
+      annotation (Placement(transformation(extent={{-7,6},{7,-6}},
+          rotation=270,
+          origin={77,-30})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem5(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0)
+      annotation (Placement(transformation(extent={{-7,6},{7,-6}},
+          rotation=0,
+          origin={53,-16})));
+    Modelica.Blocks.Math.BooleanToReal booleanToReal2
+      annotation (Placement(transformation(extent={{66,-174},{46,-154}})));
+    Modelica.Blocks.Math.RealToBoolean realToBoolean1
+      annotation (Placement(transformation(extent={{146,-174},{126,-154}})));
+    Modelica.Blocks.Logical.Not not4
+      annotation (Placement(transformation(extent={{108,-174},{88,-154}})));
   equation
     connect(upscaleCase900_HVAC.heatPortEmb, embeddedPipe.heatPortEmb)
-      annotation (Line(points={{0,-112},{46,-112},{46,-80}}, color={191,0,0}));
+      annotation (Line(points={{20,-124},{46,-124},{46,-80}},color={191,0,0}));
     connect(fan2.port_b, vol.ports[2])
-      annotation (Line(points={{14,52},{40.4,52},{40.4,56}},
+      annotation (Line(points={{14,52},{41.56,52},{41.56,56}},
                                                          color={0,127,255}));
     connect(fan2.port_a, heaPum.port_b1)
       annotation (Line(points={{-2,52},{-14,52}}, color={0,127,255}));
     connect(heaPum.port_a1, vol.ports[3])
-      annotation (Line(points={{-14,32},{41.4667,32},{41.4667,56}},
-                                                          color={0,127,255}));
+      annotation (Line(points={{-14,32},{43,32},{43,56}}, color={0,127,255}));
     connect(borFie.port_a, hex.port_b1)
       annotation (Line(points={{-56,-28},{2,-28},{2,-2}}, color={0,127,255}));
     connect(heaPum.port_b2, hex.port_b1) annotation (Line(points={{-26,32},{-26,
@@ -1415,16 +1452,11 @@ Corrected wrong value in implementation.
           points={{-78,26},{-78,52},{-26,52}}, color={0,127,255}));
     connect(threeWayValveSwitch.port_a2, hex.port_a1)
       annotation (Line(points={{-70,18},{2,18}}, color={0,127,255}));
-    connect(threeWayValveSwitch1.port_a1, vol.ports[4])
-      annotation (Line(points={{76,28},{76,56},{42.5333,56}},
-                                                           color={0,127,255}));
-    connect(temperatureSensor.port, vol.heatPort) annotation (Line(points={{34,
-            87},{28,87},{28,63},{34,63}}, color={191,0,0}));
+    connect(temperatureSensor.port, vol.heatPort) annotation (Line(points={{34,87},
+            {28,87},{28,64},{34,64}},     color={191,0,0}));
     connect(threeWayValveSwitch1.port_a2, hex.port_b2)
       annotation (Line(points={{68,20},{38,20},{38,18},{14,18}},
                                                  color={0,127,255}));
-    connect(bou1.ports[1], vol.ports[5]) annotation (Line(points={{67,64},{67,
-            56},{43.6,56}},    color={0,127,255}));
     connect(threeWayValveSwitch.switch, threeWayValveSwitch1.switch)
       annotation (Line(points={{-84.4,18},{-116,18},{-116,120},{88,120},{88,20},
             {82.4,20}}, color={255,0,255}));
@@ -1471,35 +1503,60 @@ Corrected wrong value in implementation.
           color={255,0,255}));
     connect(embeddedPipe.port_a, senTem.port_b)
       annotation (Line(points={{56,-70},{60,-70}}, color={0,127,255}));
-    connect(fan1.port_b, senTem.port_a) annotation (Line(points={{76,-54},{76,
+    connect(fan1.port_b, senTem.port_a) annotation (Line(points={{76,-60},{76,
             -70},{74,-70}}, color={0,127,255}));
     connect(embeddedPipe.port_b, senTem1.port_a)
       annotation (Line(points={{36,-70},{34,-70}}, color={0,127,255}));
     connect(threeWayValveMotor.port_b, senTem1.port_b)
-      annotation (Line(points={{20,-30},{20,-70}}, color={0,127,255}));
-    connect(threeWayValveMotor.port_a1, hex.port_a2) annotation (Line(points={{
-            20,-14},{18,-14},{18,-2},{14,-2}}, color={0,127,255}));
-    connect(threeWayValveMotor.port_a1, vol.ports[6]) annotation (Line(points={
-            {20,-14},{22,-14},{22,56},{44.6667,56}}, color={0,127,255}));
-    connect(threeWayValveMotor.port_a2, fan1.port_a) annotation (Line(points={{
-            28,-22},{76,-22},{76,-38}}, color={0,127,255}));
-    connect(threeWayValveSwitch1.port_b, fan1.port_a)
-      annotation (Line(points={{76,12},{76,-38}}, color={0,127,255}));
+      annotation (Line(points={{20,-24},{20,-70}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, hex.port_a2) annotation (Line(points={{20,-8},
+            {18,-8},{18,-2},{14,-2}},          color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, vol.ports[4]) annotation (Line(points={{20,-8},
+            {22,-8},{22,56},{44.44,56}},             color={0,127,255}));
     connect(senTem.T, conPID.u_m) annotation (Line(points={{67,-76.6},{68,-76.6},
-            {68,-144},{136,-144},{136,-131.4},{147,-131.4}}, color={0,0,127}));
-    connect(conPID.u_s, const.y)
-      annotation (Line(points={{138.6,-123},{112.9,-123}}, color={0,0,127}));
-    connect(conPID1.u_s, const2.y)
-      annotation (Line(points={{138.6,-83},{110.9,-83}}, color={0,0,127}));
+            {68,-144},{180,-144},{180,-133.6}},              color={0,0,127}));
     connect(senTem1.T, conPID1.u_m) annotation (Line(points={{27,-76.6},{27,
-            -106},{147,-106},{147,-91.4}}, color={0,0,127}));
-    connect(gain2.y, fan1.m_flow_in) annotation (Line(points={{159,-47.3},{88,
-            -47.3},{88,-46},{85.6,-46}}, color={0,0,127}));
-    connect(conPID1.y, gain2.u) annotation (Line(points={{154.7,-83},{154.7,-82},
-            {158,-82},{158,-74},{159,-74},{159,-63.4}}, color={0,0,127}));
-    connect(conPID.y, threeWayValveMotor.ctrl) annotation (Line(points={{154.7,
-            -123},{158,-123},{158,-154},{-36,-154},{-36,-70},{11.36,-70},{11.36,
-            -22}}, color={0,0,127}));
+            -106},{178,-106},{178,-93.6}}, color={0,0,127}));
+    connect(gain2.y, fan1.m_flow_in) annotation (Line(points={{199,-41.3},{88,
+            -41.3},{88,-52},{85.6,-52}}, color={0,0,127}));
+    connect(conPID1.y, gain2.u) annotation (Line(points={{186.8,-84},{186.8,-82},
+            {200,-82},{200,-72},{199,-72},{199,-57.4}}, color={0,0,127}));
+    connect(upscaleCase900_HVAC.TSensor[1], average6h.Input_average)
+      annotation (Line(points={{20.6,-136},{58,-136},{58,-124},{98,-124}},
+          color={0,0,127}));
+    connect(runningMeanTemperature6h.TRm, tab.u)
+      annotation (Line(points={{120.54,-84},{134,-84}}, color={0,0,127}));
+    connect(conPID1.u_s, tab.y)
+      annotation (Line(points={{168.4,-84},{157,-84}}, color={0,0,127}));
+    connect(average6h.TRm, tab1.u)
+      annotation (Line(points={{120.6,-124},{134,-124}}, color={0,0,127}));
+    connect(conPID.u_s, tab1.y)
+      annotation (Line(points={{170.4,-124},{157,-124}}, color={0,0,127}));
+    connect(senTem2.port_a, vol.ports[5])
+      annotation (Line(points={{58,56},{45.88,56}}, color={0,127,255}));
+    connect(senTem2.port_b, bou1.ports[1]) annotation (Line(points={{72,56},{76,
+            56},{76,70},{77,70}}, color={0,127,255}));
+    connect(senTem2.port_b, threeWayValveSwitch1.port_a1)
+      annotation (Line(points={{72,56},{76,56},{76,28}}, color={0,127,255}));
+    connect(senTem3.port_a, threeWayValveSwitch1.port_b)
+      annotation (Line(points={{77,3},{76,3},{76,12}}, color={0,127,255}));
+    connect(senTem4.port_b, fan1.port_a) annotation (Line(points={{77,-37},{
+            75.5,-37},{75.5,-44},{76,-44}}, color={0,127,255}));
+    connect(senTem3.port_b, senTem4.port_a) annotation (Line(points={{77,-11},{
+            77,-16.5},{77,-16.5},{77,-23}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a2, senTem5.port_a)
+      annotation (Line(points={{28,-16},{46,-16}}, color={0,127,255}));
+    connect(senTem5.port_b, senTem4.port_a) annotation (Line(points={{60,-16},{
+            78,-16},{77,-16.5},{77,-23}}, color={0,127,255}));
+    connect(realToBoolean1.y, not4.u)
+      annotation (Line(points={{125,-164},{110,-164}}, color={255,0,255}));
+    connect(not4.y, booleanToReal2.u)
+      annotation (Line(points={{87,-164},{68,-164}}, color={255,0,255}));
+    connect(realToBoolean1.u, conPID.y) annotation (Line(points={{148,-164},{
+            194,-164},{194,-124},{188.8,-124}}, color={0,0,127}));
+    connect(booleanToReal2.y, threeWayValveMotor.ctrl) annotation (Line(points=
+            {{45,-164},{-26,-164},{-26,-38},{11.36,-38},{11.36,-16}}, color={0,
+            0,127}));
     annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
           coordinateSystem(preserveAspectRatio=false)));
   end RBC;
@@ -1605,5 +1662,165 @@ Corrected wrong value in implementation.
     annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
           coordinateSystem(preserveAspectRatio=false)));
   end Test;
+
+  model RunningMeanTemperature6h
+    "Calculate the running mean temperature of 6 hours"
+
+     discrete Modelica.Blocks.Interfaces.RealOutput TRm(unit="K",displayUnit = "degC")
+      "Running mean average temperature"
+       annotation (Placement(transformation(extent={{96,-10},{116,10}})));
+    Modelica.Blocks.Sources.RealExpression TAmb(y=sim.Te)
+      annotation (Placement(transformation(extent={{-80,-10},{-60,10}})));
+    outer IDEAS.BoundaryConditions.SimInfoManager
+                                            sim
+      annotation (Placement(transformation(extent={{-100,80},{-80,100}})));
+  protected
+    parameter Modelica.SIunits.Time t_start(fixed=false) "Start time of the model";
+    parameter Real coeTRm[6] = {1, 0.8, 0.6, 0.5, 0.4, 0.3}./3.6
+      "weighTAmb.yg coefficient for the running average";
+    discrete Real[6] TAveHour(each unit="K",each displayUnit = "degC")
+      "Vector with the average hour temperatures of the previous nTermRm hours";
+    Real intTAmb "integral of TAmb.y";
+
+
+  initial equation
+    intTAmb=0;
+    t_start = time;
+    TAveHour=ones(6).*sim.Te;
+    TRm=sim.Te;
+  equation
+    der(intTAmb) =  TAmb.y;
+  algorithm
+    when sample(t_start+3600,3600) then
+      // Update of TAveHour
+      for i in 2:6 loop
+        TAveHour[i] := pre(TAveHour[i-1]);
+      end for;
+      TAveHour[1] := intTAmb /3600;
+      TRm :=TAveHour*coeTRm;
+    end when;
+
+  equation
+      // reinitialisation of the intTAmb
+    when sample(t_start+3600,3600) then
+      reinit(intTAmb,0);
+    end when;
+    annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+              -100},{100,100}}), graphics),
+      experiment(StopTime=864000),
+      __Dymola_experimentSetupOutput,
+      Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
+          graphics={
+          Rectangle(
+            extent={{100,100},{-100,-100}},
+            lineColor={100,100,100},
+            fillPattern=FillPattern.Solid,
+            fillColor={255,255,255}),
+          Line(
+            points={{0,100},{98,0},{0,-100}},
+            color={100,100,100},
+            smooth=Smooth.None),
+          Text(
+            extent={{-100,140},{100,100}},
+            lineColor={0,0,255},
+            textString="%name"),
+          Text(
+            extent={{-48,32},{58,-26}},
+            lineColor={0,0,255},
+            textString="6 hours")}),
+  Documentation(revisions="<html>
+<ul>
+<li>
+April 17, 2018, by Damien Picard:<br/>
+Add t_start in sample to compute correctly for non zero initial time.<br/>
+Use sim.Te as initialization instead of an arbitrary value of 283.15K.
+</li>
+<li>
+January 19, 2015, by Damien Picard:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
+  end RunningMeanTemperature6h;
+
+  model Average6h
+    "Calculate the running mean temperature of 6 hours"
+
+     discrete Modelica.Blocks.Interfaces.RealOutput TRm(unit="K",displayUnit = "degC")
+      "Running mean average temperature"
+       annotation (Placement(transformation(extent={{96,-10},{116,10}})));
+      Modelica.Blocks.Sources.RealExpression TAmb(y=Input_average)
+      annotation (Placement(transformation(extent={{-74,-10},{-54,10}})));
+      Modelica.Blocks.Interfaces.RealInput Input_average
+      "Connector of setpoint input signal"
+      annotation (Placement(transformation(extent={{-140,-20},{-100,20}})));
+  protected
+    parameter Modelica.SIunits.Time t_start(fixed=false) "Start time of the model";
+    parameter Real coeTRm[6] = {1, 0.8, 0.6, 0.5, 0.4, 0.3}./3.6
+      "weighTAmb.yg coefficient for the running average";
+    discrete Real[6] TAveHour(each unit="K",each displayUnit = "degC")
+      "Vector with the average hour temperatures of the previous nTermRm hours";
+    Real intTAmb "integral of TAmb.y";
+
+
+  initial equation
+    intTAmb=0;
+    t_start = time;
+    TAveHour=ones(6).*Input_average;
+    TRm=Input_average;
+  equation
+    der(intTAmb) =  TAmb.y;
+  algorithm
+    when sample(t_start+3600,3600) then
+      // Update of TAveHour
+      for i in 2:6 loop
+        TAveHour[i] := pre(TAveHour[i-1]);
+      end for;
+      TAveHour[1] := intTAmb /3600;
+      TRm :=TAveHour*coeTRm;
+    end when;
+
+  equation
+      // reinitialisation of the intTAmb
+    when sample(t_start+3600,3600) then
+      reinit(intTAmb,0);
+    end when;
+    annotation (Diagram(coordinateSystem(preserveAspectRatio=false, extent={{-100,
+              -100},{100,100}})),
+      experiment(StopTime=864000),
+      __Dymola_experimentSetupOutput,
+      Icon(coordinateSystem(preserveAspectRatio=false, extent={{-100,-100},{100,100}}),
+          graphics={
+          Rectangle(
+            extent={{100,100},{-100,-100}},
+            lineColor={100,100,100},
+            fillPattern=FillPattern.Solid,
+            fillColor={255,255,255}),
+          Line(
+            points={{0,100},{98,0},{0,-100}},
+            color={100,100,100},
+            smooth=Smooth.None),
+          Text(
+            extent={{-100,140},{100,100}},
+            lineColor={0,0,255},
+            textString="%name"),
+          Text(
+            extent={{-48,32},{58,-26}},
+            lineColor={0,0,255},
+            textString="6 hours")}),
+  Documentation(revisions="<html>
+<ul>
+<li>
+April 17, 2018, by Damien Picard:<br/>
+Add t_start in sample to compute correctly for non zero initial time.<br/>
+Use Input_average as initialization instead of an arbitrary value of 283.15K.
+</li>
+<li>
+January 19, 2015, by Damien Picard:<br/>
+First implementation.
+</li>
+</ul>
+</html>"));
+  end Average6h;
   annotation (uses(IDEAS(version="2.0.0"), Modelica(version="3.2.2")));
 end Thesis_Bram_Stockman;
