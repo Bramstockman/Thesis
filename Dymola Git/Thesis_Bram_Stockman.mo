@@ -1159,35 +1159,38 @@ Corrected wrong value in implementation.
   model RBC
     package Medium = IDEAS.Media.Water;
     UpscaleCase900 upscaleCase900_HVAC
-      annotation (Placement(transformation(extent={{-10,-140},{20,-120}})));
+      annotation (Placement(transformation(extent={{-58,-182},{-28,-162}})));
     IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe embeddedPipe(
       redeclare package Medium = Medium,
-      m_flow_nominal=6,
       A_floor=1200,
       redeclare IDEAS.Fluid.HeatExchangers.RadiantSlab.BaseClasses.FH_Standard1
-        RadSlaCha)
+        RadSlaCha,
+      T_start=308.15,
+      m_flow_nominal=1)
       annotation (Placement(transformation(
           extent={{-10,-10},{10,10}},
           rotation=180,
-          origin={46,-70})));
+          origin={42,-98})));
     IDEAS.Fluid.Movers.FlowControlled_m_flow fan1(
       redeclare package Medium = Medium,
       addPowerToMedium=false,
       tau=60,
       constantMassFlowRate=1,
       inputType=IDEAS.Fluid.Types.InputType.Continuous,
-      m_flow_nominal=6,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      use_inputFilter=false)
+      use_inputFilter=false,
+      m_flow_nominal=1,
+      T_start=308.15)
       annotation (Placement(transformation(extent={{-8,-8},{8,8}},
           rotation=270,
-          origin={76,-52})));
+          origin={72,-80})));
     IDEAS.Fluid.MixingVolumes.MixingVolume vol(
       redeclare package Medium = Medium,
       nPorts=5,
+      m_flow_nominal=fan3.m_flow_nominal,
       V=2,
-      m_flow_nominal=fan3.m_flow_nominal)
+      T_start=308.15)
                 annotation (Placement(transformation(
           extent={{-9,-8},{9,8}},
           rotation=0,
@@ -1195,14 +1198,14 @@ Corrected wrong value in implementation.
     IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveSwitch
                                                 threeWayValveSwitch1(
       redeclare package Medium = Medium,
-      m_flow_nominal=1,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
-                                                    annotation (Placement(
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      T_start=308.15,
+      m_flow_nominal=1)                             annotation (Placement(
           transformation(
           extent={{-8,-8},{8,8}},
           rotation=270,
-          origin={76,20})));
+          origin={76,18})));
     IDEAS.Fluid.Movers.FlowControlled_m_flow fan2(
       redeclare package Medium = Medium,
       addPowerToMedium=false,
@@ -1210,7 +1213,8 @@ Corrected wrong value in implementation.
       constantMassFlowRate=1,
       inputType=IDEAS.Fluid.Types.InputType.Continuous,
       use_inputFilter=false,
-      m_flow_nominal=6)
+      m_flow_nominal=2,
+      T_start=308.15)
       annotation (Placement(transformation(extent={{-8,-8},{8,8}},
           rotation=0,
           origin={6,52})));
@@ -1225,9 +1229,9 @@ Corrected wrong value in implementation.
       m1_flow_nominal=fan2.m_flow_nominal,
       m2_flow_nominal=fan3.m_flow_nominal,
       enable_variable_speed=false,
-      scaling_factor=2,
       dp1_nominal=0,
-      dp2_nominal=0)
+      dp2_nominal=0,
+      scaling_factor=3)
       annotation (Placement(transformation(extent={{10,-10},{-10,10}},
           rotation=270,
           origin={-20,42})));
@@ -1265,9 +1269,9 @@ Corrected wrong value in implementation.
       redeclare package Medium2 = Medium,
       eps=0.8,
       m1_flow_nominal=fan3.m_flow_nominal,
-      m2_flow_nominal=fan3.m_flow_nominal,
       dp1_nominal=0,
-      dp2_nominal=0)                                     annotation (Placement(
+      dp2_nominal=0,
+      m2_flow_nominal=1)                                 annotation (Placement(
           transformation(
           extent={{-10,10},{10,-10}},
           rotation=270,
@@ -1297,12 +1301,12 @@ Corrected wrong value in implementation.
       use_inputFilter=false,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       inputType=IDEAS.Fluid.Types.InputType.Continuous,
-      m_flow_nominal=6)
+      m_flow_nominal=2)
       annotation (Placement(transformation(extent={{-9,-8},{9,8}},
           rotation=90,
           origin={-78,-5})));
     HeatingCoolingSet heatingCoolingSet
-      annotation (Placement(transformation(extent={{-248,108},{-226,130}})));
+      annotation (Placement(transformation(extent={{-250,108},{-228,130}})));
     IDEAS.Fluid.Sources.Boundary_pT bou1(
       redeclare package Medium = Medium,
       nPorts=1,
@@ -1313,13 +1317,13 @@ Corrected wrong value in implementation.
     Modelica.Blocks.Logical.Hysteresis
                                      hysteresis(
       pre_y_start=false,
-      uLow=273.15 + 29,
-      uHigh=273.15 + 31)
+      uLow=273.15 + 32,
+      uHigh=273.15 + 37)
              annotation (Placement(transformation(extent={{136,56},{154,74}})));
     Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor temperatureSensor
       annotation (Placement(transformation(extent={{34,80},{48,94}})));
     Modelica.Blocks.Math.RealToBoolean realToBoolean
-      annotation (Placement(transformation(extent={{-210,114},{-198,126}})));
+      annotation (Placement(transformation(extent={{-218,114},{-206,126}})));
     Modelica.Blocks.Logical.Not not1
       annotation (Placement(transformation(extent={{-192,114},{-180,126}})));
     Modelica.Blocks.Math.BooleanToReal booleanToReal
@@ -1329,107 +1333,104 @@ Corrected wrong value in implementation.
     Modelica.Blocks.Logical.And and1
       annotation (Placement(transformation(extent={{144,20},{158,34}})));
     Modelica.Blocks.Logical.Not not3
-      annotation (Placement(transformation(extent={{104,6},{118,20}})));
+      annotation (Placement(transformation(extent={{106,0},{120,14}})));
     Modelica.Blocks.Math.RealToInteger realToInteger1
       annotation (Placement(transformation(extent={{210,20},{224,34}})));
     Modelica.Blocks.Logical.Or or1
       annotation (Placement(transformation(extent={{-152,-12},{-138,2}})));
-    Modelica.Blocks.Math.Gain gain(k=6) annotation (Placement(transformation(
+    Modelica.Blocks.Math.Gain gain(k=2) annotation (Placement(transformation(
           extent={{-8,-8},{8,8}},
           rotation=270,
           origin={6,82})));
     Modelica.Blocks.Math.BooleanToReal booleanToReal1
       annotation (Placement(transformation(extent={{-132,-12},{-118,2}})));
-    Modelica.Blocks.Math.Gain gain1(k=6) annotation (Placement(transformation(
+    Modelica.Blocks.Math.Gain gain1(k=2) annotation (Placement(transformation(
           extent={{-7,-7},{7,7}},
           rotation=0,
           origin={-103,-5})));
     IDEAS.Fluid.Sensors.TemperatureTwoPort senTem(
-      m_flow_nominal=6,
       redeclare package Medium = Medium,
-      tau=0)
-      annotation (Placement(transformation(extent={{74,-64},{60,-76}})));
+      tau=0,
+      initType=Modelica.Blocks.Types.Init.SteadyState,
+      m_flow_nominal=1,
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{70,-92},{56,-104}})));
     IDEAS.Fluid.Sensors.TemperatureTwoPort senTem1(
-      m_flow_nominal=6,
       redeclare package Medium = Medium,
-      tau=0)
-      annotation (Placement(transformation(extent={{34,-64},{20,-76}})));
+      tau=0,
+      initType=Modelica.Blocks.Types.Init.SteadyState,
+      m_flow_nominal=1,
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{30,-92},{16,-104}})));
     IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveMotor
                                                 threeWayValveMotor(
       redeclare package Medium = Medium,
       energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
-      m_flow_nominal=6,
-      allowFlowReversal=true)                       annotation (Placement(
+      allowFlowReversal=true,
+      T_start=308.15,
+      m_flow_nominal=1)                             annotation (Placement(
           transformation(
           extent={{-8,8},{8,-8}},
           rotation=270,
-          origin={20,-16})));
+          origin={20,-38})));
     IDEAS.Controls.Continuous.LimPID conPID(
       controllerType=Modelica.Blocks.Types.SimpleController.PI,
-      yMax=1,
+      xi_start=0,
       yMin=0,
-      xi_start=1,
-      Ti=100,
-      k=10)
-      annotation (Placement(transformation(extent={{172,-132},{188,-116}})));
+      Ti=60,
+      k=1,
+      yMax=0.9)
+      annotation (Placement(transformation(extent={{160,-186},{176,-170}})));
     IDEAS.Controls.Continuous.LimPID conPID1(
       controllerType=Modelica.Blocks.Types.SimpleController.PI,
-      xi_start=1,
       yMax=1,
-      yMin=0.1,
-      k=10,
-      Ti=100)
-      annotation (Placement(transformation(extent={{170,-92},{186,-76}})));
-    Modelica.Blocks.Math.Gain gain2(k=6) annotation (Placement(transformation(
+      xi_start=1,
+      k=1,
+      yMin=0,
+      Ti=60)
+      annotation (Placement(transformation(extent={{-110,-76},{-94,-60}})));
+    Modelica.Blocks.Math.Gain gain2(k=1) annotation (Placement(transformation(
           extent={{-7,-7},{7,7}},
           rotation=90,
-          origin={199,-49})));
+          origin={191,-87})));
     RunningMeanTemperature6h runningMeanTemperature6h
-      annotation (Placement(transformation(extent={{102,-94},{120,-74}})));
+      annotation (Placement(transformation(extent={{-188,-78},{-170,-58}})));
     Average6h average6h
-      annotation (Placement(transformation(extent={{100,-134},{120,-114}})));
-    IDEAS.Controls.SetPoints.Table tab(table=[-8.0 + 273,30 + 273; 15 + 273,22
+      annotation (Placement(transformation(extent={{72,-188},{92,-168}})));
+    IDEAS.Controls.SetPoints.Table tab(table=[-8.0 + 273,35 + 273; 15 + 273,27
            + 273])
-      annotation (Placement(transformation(extent={{136,-94},{156,-74}})));
-    IDEAS.Controls.SetPoints.Table tab1(table=[-8.0 + 273,25 + 273; 15 + 273,17
+      annotation (Placement(transformation(extent={{-152,-78},{-132,-58}})));
+    IDEAS.Controls.SetPoints.Table tab1(table=[22 + 273,20 + 273; 24 + 273,27
            + 273])
-      annotation (Placement(transformation(extent={{136,-134},{156,-114}})));
-    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem2(
-      m_flow_nominal=6,
+      annotation (Placement(transformation(extent={{118,-188},{138,-168}})));
+    Modelica.Blocks.Sources.Constant const1(k=1)
+      annotation (Placement(transformation(extent={{148,-148},{164,-132}})));
+    Modelica.Blocks.Math.Add sum2(k2=-1)
+      annotation (Placement(transformation(extent={{190,-178},{210,-158}})));
+    IDEAS.Fluid.FixedResistances.Junction jun(
       redeclare package Medium = Medium,
-      tau=0)
-      annotation (Placement(transformation(extent={{58,62},{72,50}})));
-    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem3(
-      m_flow_nominal=6,
-      redeclare package Medium = Medium,
-      tau=0)
-      annotation (Placement(transformation(extent={{-7,6},{7,-6}},
+      dp_nominal={0,0,0},
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      T_start=308.15,
+      m_flow_nominal={1,1,1})
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
           rotation=270,
-          origin={77,-4})));
-    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem4(
-      m_flow_nominal=6,
+          origin={76,-16})));
+    IDEAS.Fluid.FixedResistances.Junction jun1(
       redeclare package Medium = Medium,
-      tau=0)
-      annotation (Placement(transformation(extent={{-7,6},{7,-6}},
-          rotation=270,
-          origin={77,-30})));
-    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem5(
-      m_flow_nominal=6,
-      redeclare package Medium = Medium,
-      tau=0)
-      annotation (Placement(transformation(extent={{-7,6},{7,-6}},
-          rotation=0,
-          origin={53,-16})));
-    Modelica.Blocks.Math.BooleanToReal booleanToReal2
-      annotation (Placement(transformation(extent={{66,-174},{46,-154}})));
-    Modelica.Blocks.Math.RealToBoolean realToBoolean1
-      annotation (Placement(transformation(extent={{146,-174},{126,-154}})));
-    Modelica.Blocks.Logical.Not not4
-      annotation (Placement(transformation(extent={{108,-174},{88,-154}})));
+      m_flow_nominal={6,6,6},
+      dp_nominal={0,0,0},
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={-28,-28})));
   equation
     connect(upscaleCase900_HVAC.heatPortEmb, embeddedPipe.heatPortEmb)
-      annotation (Line(points={{20,-124},{46,-124},{46,-80}},color={191,0,0}));
+      annotation (Line(points={{-28,-166},{42,-166},{42,-108}},
+                                                             color={191,0,0}));
     connect(fan2.port_b, vol.ports[2])
       annotation (Line(points={{14,52},{41.56,52},{41.56,56}},
                                                          color={0,127,255}));
@@ -1437,10 +1438,6 @@ Corrected wrong value in implementation.
       annotation (Line(points={{-2,52},{-14,52}}, color={0,127,255}));
     connect(heaPum.port_a1, vol.ports[3])
       annotation (Line(points={{-14,32},{43,32},{43,56}}, color={0,127,255}));
-    connect(borFie.port_a, hex.port_b1)
-      annotation (Line(points={{-56,-28},{2,-28},{2,-2}}, color={0,127,255}));
-    connect(heaPum.port_b2, hex.port_b1) annotation (Line(points={{-26,32},{-26,
-            -28},{2,-28},{2,-2}}, color={0,127,255}));
     connect(bou.ports[1], heaPum.port_a2)
       annotation (Line(points={{-84,59},{-78,59},{-78,52},{-26,52}},
                                                    color={0,127,255}));
@@ -1455,15 +1452,14 @@ Corrected wrong value in implementation.
     connect(temperatureSensor.port, vol.heatPort) annotation (Line(points={{34,87},
             {28,87},{28,64},{34,64}},     color={191,0,0}));
     connect(threeWayValveSwitch1.port_a2, hex.port_b2)
-      annotation (Line(points={{68,20},{38,20},{38,18},{14,18}},
-                                                 color={0,127,255}));
+      annotation (Line(points={{68,18},{14,18}}, color={0,127,255}));
     connect(threeWayValveSwitch.switch, threeWayValveSwitch1.switch)
-      annotation (Line(points={{-84.4,18},{-116,18},{-116,120},{88,120},{88,20},
-            {82.4,20}}, color={255,0,255}));
+      annotation (Line(points={{-84.4,18},{-116,18},{-116,120},{88,120},{88,18},
+            {82.4,18}}, color={255,0,255}));
     connect(realToBoolean.y, not1.u)
-      annotation (Line(points={{-197.4,120},{-193.2,120}}, color={255,0,255}));
+      annotation (Line(points={{-205.4,120},{-193.2,120}}, color={255,0,255}));
     connect(not1.y, threeWayValveSwitch1.switch) annotation (Line(points={{-179.4,
-            120},{88,120},{88,20},{82.4,20}},        color={255,0,255}));
+            120},{88,120},{88,18},{82.4,18}},        color={255,0,255}));
     connect(not2.u, hysteresis.y)
       annotation (Line(points={{166.6,65},{154.9,65}}, color={255,0,255}));
     connect(temperatureSensor.T, hysteresis.u) annotation (Line(points={{48,87},
@@ -1473,9 +1469,9 @@ Corrected wrong value in implementation.
     connect(and1.y, booleanToReal.u)
       annotation (Line(points={{158.7,27},{168.6,27}}, color={255,0,255}));
     connect(and1.u2, not3.y) annotation (Line(points={{142.6,21.4},{126.65,21.4},
-            {126.65,13},{118.7,13}}, color={255,0,255}));
-    connect(not3.u, threeWayValveSwitch1.switch) annotation (Line(points={{102.6,
-            13},{96,13},{96,14},{88,14},{88,20},{82.4,20}},
+            {126.65,7},{120.7,7}},   color={255,0,255}));
+    connect(not3.u, threeWayValveSwitch1.switch) annotation (Line(points={{104.6,7},
+            {96,7},{96,14},{88,14},{88,18},{82.4,18}},
                                                   color={255,0,255}));
     connect(realToInteger1.y, heaPum.stage) annotation (Line(points={{224.7,27},
             {228,27},{228,112},{-40,112},{-40,24},{-17,24},{-17,30}}, color={
@@ -1496,69 +1492,87 @@ Corrected wrong value in implementation.
             -5},{-164,108},{202,108},{202,14},{164,14},{164,27},{168.6,27}},
           color={255,0,255}));
     connect(heatingCoolingSet.Setpoint, realToBoolean.u) annotation (Line(
-          points={{-224.9,119.88},{-217.45,119.88},{-217.45,120},{-211.2,120}},
+          points={{-226.9,119.88},{-217.45,119.88},{-217.45,120},{-219.2,120}},
           color={0,0,127}));
     connect(or1.u2, threeWayValveSwitch1.switch) annotation (Line(points={{-153.4,
-            -10.6},{-170,-10.6},{-170,120},{88,120},{88,20},{82.4,20}},
+            -10.6},{-170,-10.6},{-170,120},{88,120},{88,18},{82.4,18}},
           color={255,0,255}));
     connect(embeddedPipe.port_a, senTem.port_b)
-      annotation (Line(points={{56,-70},{60,-70}}, color={0,127,255}));
-    connect(fan1.port_b, senTem.port_a) annotation (Line(points={{76,-60},{76,
-            -70},{74,-70}}, color={0,127,255}));
+      annotation (Line(points={{52,-98},{56,-98}}, color={0,127,255}));
+    connect(fan1.port_b, senTem.port_a) annotation (Line(points={{72,-88},{72,
+            -98},{70,-98}}, color={0,127,255}));
     connect(embeddedPipe.port_b, senTem1.port_a)
-      annotation (Line(points={{36,-70},{34,-70}}, color={0,127,255}));
+      annotation (Line(points={{32,-98},{30,-98}}, color={0,127,255}));
     connect(threeWayValveMotor.port_b, senTem1.port_b)
-      annotation (Line(points={{20,-24},{20,-70}}, color={0,127,255}));
-    connect(threeWayValveMotor.port_a1, hex.port_a2) annotation (Line(points={{20,-8},
-            {18,-8},{18,-2},{14,-2}},          color={0,127,255}));
-    connect(threeWayValveMotor.port_a1, vol.ports[4]) annotation (Line(points={{20,-8},
-            {22,-8},{22,56},{44.44,56}},             color={0,127,255}));
-    connect(senTem.T, conPID.u_m) annotation (Line(points={{67,-76.6},{68,-76.6},
-            {68,-144},{180,-144},{180,-133.6}},              color={0,0,127}));
-    connect(senTem1.T, conPID1.u_m) annotation (Line(points={{27,-76.6},{27,
-            -106},{178,-106},{178,-93.6}}, color={0,0,127}));
-    connect(gain2.y, fan1.m_flow_in) annotation (Line(points={{199,-41.3},{88,
-            -41.3},{88,-52},{85.6,-52}}, color={0,0,127}));
-    connect(conPID1.y, gain2.u) annotation (Line(points={{186.8,-84},{186.8,-82},
-            {200,-82},{200,-72},{199,-72},{199,-57.4}}, color={0,0,127}));
+      annotation (Line(points={{20,-46},{20,-80},{12,-80},{12,-98},{16,-98}},
+                                                   color={0,127,255}));
+    connect(gain2.y, fan1.m_flow_in) annotation (Line(points={{191,-79.3},{84,
+            -79.3},{84,-80},{81.6,-80}}, color={0,0,127}));
     connect(upscaleCase900_HVAC.TSensor[1], average6h.Input_average)
-      annotation (Line(points={{20.6,-136},{58,-136},{58,-124},{98,-124}},
+      annotation (Line(points={{-27.4,-178},{70,-178}},
           color={0,0,127}));
     connect(runningMeanTemperature6h.TRm, tab.u)
-      annotation (Line(points={{120.54,-84},{134,-84}}, color={0,0,127}));
-    connect(conPID1.u_s, tab.y)
-      annotation (Line(points={{168.4,-84},{157,-84}}, color={0,0,127}));
+      annotation (Line(points={{-169.46,-68},{-154,-68}},
+                                                        color={0,0,127}));
     connect(average6h.TRm, tab1.u)
-      annotation (Line(points={{120.6,-124},{134,-124}}, color={0,0,127}));
-    connect(conPID.u_s, tab1.y)
-      annotation (Line(points={{170.4,-124},{157,-124}}, color={0,0,127}));
-    connect(senTem2.port_a, vol.ports[5])
-      annotation (Line(points={{58,56},{45.88,56}}, color={0,127,255}));
-    connect(senTem2.port_b, bou1.ports[1]) annotation (Line(points={{72,56},{76,
-            56},{76,70},{77,70}}, color={0,127,255}));
-    connect(senTem2.port_b, threeWayValveSwitch1.port_a1)
-      annotation (Line(points={{72,56},{76,56},{76,28}}, color={0,127,255}));
-    connect(senTem3.port_a, threeWayValveSwitch1.port_b)
-      annotation (Line(points={{77,3},{76,3},{76,12}}, color={0,127,255}));
-    connect(senTem4.port_b, fan1.port_a) annotation (Line(points={{77,-37},{
-            75.5,-37},{75.5,-44},{76,-44}}, color={0,127,255}));
-    connect(senTem3.port_b, senTem4.port_a) annotation (Line(points={{77,-11},{
-            77,-16.5},{77,-16.5},{77,-23}}, color={0,127,255}));
-    connect(threeWayValveMotor.port_a2, senTem5.port_a)
-      annotation (Line(points={{28,-16},{46,-16}}, color={0,127,255}));
-    connect(senTem5.port_b, senTem4.port_a) annotation (Line(points={{60,-16},{
-            78,-16},{77,-16.5},{77,-23}}, color={0,127,255}));
-    connect(realToBoolean1.y, not4.u)
-      annotation (Line(points={{125,-164},{110,-164}}, color={255,0,255}));
-    connect(not4.y, booleanToReal2.u)
-      annotation (Line(points={{87,-164},{68,-164}}, color={255,0,255}));
-    connect(realToBoolean1.u, conPID.y) annotation (Line(points={{148,-164},{
-            194,-164},{194,-124},{188.8,-124}}, color={0,0,127}));
-    connect(booleanToReal2.y, threeWayValveMotor.ctrl) annotation (Line(points=
-            {{45,-164},{-26,-164},{-26,-38},{11.36,-38},{11.36,-16}}, color={0,
-            0,127}));
-    annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
-          coordinateSystem(preserveAspectRatio=false)));
+      annotation (Line(points={{92.6,-178},{116,-178}},  color={0,0,127}));
+    connect(vol.ports[4], threeWayValveSwitch1.port_a1) annotation (Line(points={{44.44,
+            56},{76,56},{76,26}},        color={0,127,255}));
+    connect(bou1.ports[1], threeWayValveSwitch1.port_a1)
+      annotation (Line(points={{77,70},{76,70},{76,26}}, color={0,127,255}));
+    connect(senTem.T, conPID1.u_m) annotation (Line(points={{63,-104.6},{62,
+            -104.6},{62,-112},{-102,-112},{-102,-77.6}},
+                                                       color={0,0,127}));
+    connect(senTem1.T, conPID.u_m) annotation (Line(points={{23,-104.6},{23,
+            -206},{168,-206},{168,-187.6}},
+                                      color={0,0,127}));
+    connect(conPID1.y, threeWayValveMotor.ctrl) annotation (Line(points={{-93.2,
+            -68},{11.36,-68},{11.36,-38}},                         color={0,0,
+            127}));
+    connect(threeWayValveMotor.port_a2, jun.port_3)
+      annotation (Line(points={{28,-38},{58,-38},{58,-16},{66,-16}},
+                                                   color={0,127,255}));
+    connect(threeWayValveSwitch1.port_b, jun.port_1)
+      annotation (Line(points={{76,10},{76,-6}}, color={0,127,255}));
+    connect(fan1.port_a, jun.port_2)
+      annotation (Line(points={{72,-72},{72,-50},{76,-50},{76,-26}},
+                                                   color={0,127,255}));
+    connect(heaPum.port_b2, jun1.port_3) annotation (Line(points={{-26,32},{-28,
+            32},{-28,-18}}, color={0,127,255}));
+    connect(borFie.port_a, jun1.port_2)
+      annotation (Line(points={{-56,-28},{-38,-28}}, color={0,127,255}));
+    connect(hex.port_b1, jun1.port_1) annotation (Line(points={{2,-2},{-8,-2},{
+            -8,-28},{-18,-28}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, hex.port_a2) annotation (Line(points={{
+            20,-30},{18,-30},{18,-2},{14,-2}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, vol.ports[5]) annotation (Line(points={
+            {20,-30},{45.88,-30},{45.88,56}}, color={0,127,255}));
+    connect(sum2.u1, const1.y) annotation (Line(points={{188,-162},{172,-162},{
+            172,-140},{164.8,-140}}, color={0,0,127}));
+    connect(conPID.y, sum2.u2) annotation (Line(points={{176.8,-178},{182,-178},
+            {182,-174},{188,-174}}, color={0,0,127}));
+    connect(sum2.y, gain2.u) annotation (Line(points={{211,-168},{218,-168},{
+            218,-140},{191,-140},{191,-95.4}}, color={0,0,127}));
+    connect(conPID1.u_s, tab.y)
+      annotation (Line(points={{-111.6,-68},{-131,-68}}, color={0,0,127}));
+    connect(tab1.y, conPID.u_s)
+      annotation (Line(points={{139,-178},{158.4,-178}}, color={0,0,127}));
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-280,
+              -220},{280,160}})),                                  Diagram(
+          coordinateSystem(preserveAspectRatio=false, extent={{-280,-220},{280,
+              160}})),
+      experiment(
+        StopTime=31536000,
+        __Dymola_NumberOfIntervals=15000,
+        Tolerance=1e-06,
+        __Dymola_fixedstepsize=20,
+        __Dymola_Algorithm="Euler"),
+      __Dymola_experimentSetupOutput,
+      __Dymola_experimentFlags(
+        Advanced(GenerateVariableDependencies=false, OutputModelicaCode=false),
+        Evaluate=false,
+        OutputCPUtime=false,
+        OutputFlatModelica=false));
   end RBC;
 
   block HeatingCoolingMode
@@ -1822,5 +1836,1059 @@ First implementation.
 </ul>
 </html>"));
   end Average6h;
+
+  model RBC_ventilation
+
+    extends Thesis_Bram_Stockman.RBC(vol(nPorts=7));
+     package MediumAir = IDEAS.Media.Air;
+
+
+    IDEAS.Fluid.HeatExchangers.ConstantEffectiveness hex1(
+      eps=0.8,
+      dp1_nominal=0,
+      dp2_nominal=0,
+      redeclare package Medium2 = MediumAir,
+      m1_flow_nominal=0.72,
+      m2_flow_nominal=0.72,
+      redeclare package Medium1 = MediumAir)             annotation (Placement(
+          transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={-120,-82})));
+    IDEAS.Fluid.Sources.Boundary_pT
+                        bouAir(
+      redeclare package Medium = MediumAir,
+      use_T_in=true,
+      nPorts=2)      "Air boundary with constant temperature"
+      annotation (Placement(transformation(
+          extent={{-10,10},{10,-10}},
+          origin={-158,-78})));
+    Modelica.Blocks.Sources.RealExpression realExpression(y=sim.Te)
+      annotation (Placement(transformation(extent={{-196,-92},{-176,-72}})));
+    IDEAS.Fluid.HeatExchangers.ConstantEffectiveness heating_coil(
+      eps=0.8,
+      dp1_nominal=0,
+      dp2_nominal=0,
+      redeclare package Medium2 = MediumAir,
+      m1_flow_nominal=0.72,
+      m2_flow_nominal=0.72,
+      redeclare package Medium1 = Medium) annotation (Placement(transformation(
+          extent={{-10,10},{10,-10}},
+          rotation=180,
+          origin={-48,-70})));
+    IDEAS.Fluid.HeatExchangers.ConstantEffectiveness cooling_coil(
+      eps=0.8,
+      dp1_nominal=0,
+      dp2_nominal=0,
+      redeclare package Medium2 = MediumAir,
+      m1_flow_nominal=0.72,
+      m2_flow_nominal=0.72,
+      redeclare package Medium1 = Medium) annotation (Placement(transformation(
+          extent={{-10,10},{10,-10}},
+          rotation=180,
+          origin={-90,-70})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan4(
+      addPowerToMedium=false,
+      tau=60,
+      constantMassFlowRate=1,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      use_inputFilter=false,
+      m_flow_nominal=0.72,
+      inputType=IDEAS.Fluid.Types.InputType.Stages,
+      redeclare package Medium = MediumAir,
+      T_start=297.15)
+      annotation (Placement(transformation(extent={{-8,-8},{8,8}},
+          rotation=270,
+          origin={-28,-92})));
+    IDEAS.Fluid.Actuators.Dampers.VAVBoxExponential
+                                        vavDam(
+      redeclare package Medium = MediumAir,
+      from_dp=true,
+      m_flow_nominal=0.72,
+      dp_nominal=1)                     "Damper" annotation (Placement(
+          transformation(
+          extent={{-10,-10},{10,10}},
+          origin={-28,-122},
+          rotation=270)));
+    IDEAS.Controls.SetPoints.OccupancySchedule occSch(occupancy=3600*{7,19,31,
+          43,55,67,79,91,103,115,127,139}, period=7*24*3600)
+      annotation (Placement(transformation(extent={{-72,-242},{-52,-222}})));
+    Modelica.Blocks.Math.BooleanToInteger booleanToInteger
+      annotation (Placement(transformation(extent={{-42,-248},{-22,-228}})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan5(
+      redeclare IDEAS.Fluid.Movers.Data.Generic per,
+      redeclare package Medium = Medium,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      addPowerToMedium=false,
+      tau=60,
+      use_inputFilter=false,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      inputType=IDEAS.Fluid.Types.InputType.Stages,
+      m_flow_nominal=3)
+      annotation (Placement(transformation(extent={{-9,-8},{9,8}},
+          rotation=90,
+          origin={-124,-51})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan6(
+      redeclare IDEAS.Fluid.Movers.Data.Generic per,
+      redeclare package Medium = Medium,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      addPowerToMedium=false,
+      tau=60,
+      use_inputFilter=false,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      inputType=IDEAS.Fluid.Types.InputType.Stages,
+      m_flow_nominal=3)
+      annotation (Placement(transformation(extent={{-9,-8},{9,8}},
+          rotation=180,
+          origin={-12,-63})));
+    Modelica.Blocks.Math.BooleanToInteger booleanToInteger1
+      annotation (Placement(transformation(extent={{-168,-60},{-148,-40}})));
+    Modelica.Blocks.Math.BooleanToInteger booleanToInteger2
+      annotation (Placement(transformation(extent={{-40,-278},{-20,-258}})));
+    IDEAS.Controls.Continuous.LimPID
+                               conDam(controllerType=Modelica.Blocks.Types.SimpleController.P,
+        yMin=0.1) "Controller for damper"
+      annotation (Placement(transformation(extent={{14,-250},{34,-230}})));
+    Modelica.Blocks.Sources.Constant const(k=273 + 21)
+      annotation (Placement(transformation(extent={{62,-274},{42,-254}})));
+  equation
+    connect(bouAir.T_in, realExpression.y)
+      annotation (Line(points={{-170,-82},{-175,-82}}, color={0,0,127}));
+    connect(bouAir.ports[1], hex1.port_b1) annotation (Line(points={{-148,-80},
+            {-132,-80},{-132,-88},{-130,-88}}, color={0,127,255}));
+    connect(hex1.port_a1, upscaleCase900_HVAC.port_b[1]) annotation (Line(
+          points={{-110,-88},{-50,-88},{-50,-150},{-47,-150}}, color={0,127,255}));
+    connect(bouAir.ports[2], hex1.port_a2)
+      annotation (Line(points={{-148,-76},{-130,-76}}, color={0,127,255}));
+    connect(hex1.port_b2, cooling_coil.port_a2)
+      annotation (Line(points={{-110,-76},{-100,-76}}, color={0,127,255}));
+    connect(cooling_coil.port_b2, heating_coil.port_a2)
+      annotation (Line(points={{-80,-76},{-58,-76}}, color={0,127,255}));
+    connect(heating_coil.port_b2, fan4.port_a) annotation (Line(points={{-38,
+            -76},{-38,-84},{-28,-84}}, color={0,127,255}));
+    connect(fan4.port_b, vavDam.port_a)
+      annotation (Line(points={{-28,-100},{-28,-112}}, color={0,127,255}));
+    connect(vavDam.port_b, upscaleCase900_HVAC.port_a[1]) annotation (Line(
+          points={{-28,-132},{-42,-132},{-42,-150},{-43,-150}}, color={0,127,
+            255}));
+    connect(occSch.occupied, booleanToInteger.u)
+      annotation (Line(points={{-51,-238},{-44,-238}}, color={255,0,255}));
+    connect(booleanToInteger.y, fan4.stage) annotation (Line(points={{-21,-238},
+            {-4,-238},{-4,-92},{-18.4,-92}}, color={255,127,0}));
+    connect(cooling_coil.port_a1, hex.port_b2) annotation (Line(points={{-80,
+            -64},{-80,-50},{30,-50},{30,24},{14,24},{14,18}}, color={0,127,255}));
+    connect(cooling_coil.port_b1, fan5.port_a) annotation (Line(points={{-100,
+            -64},{-112,-64},{-112,-60},{-124,-60}}, color={0,127,255}));
+    connect(fan5.port_b, hex.port_a2) annotation (Line(points={{-124,-42},{-124,
+            -38},{8,-38},{8,-2},{14,-2}}, color={0,127,255}));
+    connect(vol.ports[6], heating_coil.port_b1) annotation (Line(points={{43,56},
+            {42,56},{42,-48},{-58,-48},{-58,-64}}, color={0,127,255}));
+    connect(heating_coil.port_a1, fan6.port_b) annotation (Line(points={{-38,
+            -64},{-30,-64},{-30,-63},{-21,-63}}, color={0,127,255}));
+    connect(vol.ports[7], fan6.port_a) annotation (Line(points={{43,56},{50,56},
+            {50,-54},{-3,-54},{-3,-63}}, color={0,127,255}));
+    connect(fan5.stage, booleanToInteger1.y) annotation (Line(points={{-133.6,
+            -51},{-140,-51},{-140,-50},{-147,-50}}, color={255,127,0}));
+    connect(booleanToInteger1.u, not1.y) annotation (Line(points={{-170,-50},{
+            -174,-50},{-174,120},{-179.4,120}}, color={255,0,255}));
+    connect(booleanToInteger2.u, not1.u) annotation (Line(points={{-42,-268},{
+            -200,-268},{-200,120},{-193.2,120}}, color={255,0,255}));
+    connect(booleanToInteger2.y, fan6.stage) annotation (Line(points={{-19,-268},
+            {0,-268},{0,-72.6},{-12,-72.6}}, color={255,127,0}));
+    connect(conDam.u_s, average6h.Input_average) annotation (Line(points={{12,
+            -240},{12,-166},{68,-166}}, color={0,0,127}));
+    connect(const.y, conDam.u_m) annotation (Line(points={{41,-264},{32,-264},{
+            32,-252},{24,-252}}, color={0,0,127}));
+    connect(conDam.y, vavDam.y) annotation (Line(points={{35,-240},{48,-240},{
+            48,-206},{-16,-206},{-16,-122}}, color={0,0,127}));
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+          coordinateSystem(preserveAspectRatio=false)));
+  end RBC_ventilation;
+
+  model PI_fan_tuning
+
+    package Medium = IDEAS.Media.Water;
+
+    IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe embeddedPipe(
+      redeclare package Medium = Medium,
+      m_flow_nominal=6,
+      A_floor=1200,
+      redeclare IDEAS.Fluid.HeatExchangers.RadiantSlab.BaseClasses.FH_Standard1
+        RadSlaCha,
+      T_start=297.15)
+      annotation (Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={46,-70})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan1(
+      redeclare package Medium = Medium,
+      addPowerToMedium=false,
+      tau=60,
+      constantMassFlowRate=1,
+      m_flow_nominal=6,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      use_inputFilter=false,
+      inputType=IDEAS.Fluid.Types.InputType.Constant,
+      T_start=297.15)
+      annotation (Placement(transformation(extent={{-8,-8},{8,8}},
+          rotation=270,
+          origin={76,-52})));
+    IDEAS.Fluid.MixingVolumes.MixingVolume vol(
+      redeclare package Medium = Medium,
+      nPorts=5,
+      m_flow_nominal=fan3.m_flow_nominal,
+      V=1,
+      T_start=308.15)
+                annotation (Placement(transformation(
+          extent={{-9,-8},{9,8}},
+          rotation=0,
+          origin={71,94})));
+    IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveSwitch
+                                                threeWayValveSwitch1(
+      redeclare package Medium = Medium,
+      m_flow_nominal=1,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      T_start=297.15)                               annotation (Placement(
+          transformation(
+          extent={{-8,-8},{8,8}},
+          rotation=270,
+          origin={76,18})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan2(
+      redeclare package Medium = Medium,
+      addPowerToMedium=false,
+      tau=60,
+      use_inputFilter=false,
+      m_flow_nominal=6,
+      inputType=IDEAS.Fluid.Types.InputType.Constant,
+      constantMassFlowRate=6)
+      annotation (Placement(transformation(extent={{-8,-8},{8,8}},
+          rotation=0,
+          origin={46,58})));
+    IDEAS.Fluid.HeatPumps.ScrollWaterToWater  heaPum(
+      redeclare package Medium1 = Medium,
+      redeclare package Medium2 = Medium,
+      allowFlowReversal1=false,
+      allowFlowReversal2=false,
+      redeclare package ref = IDEAS.Media.Refrigerants.R410A,
+      datHeaPum=
+          IDEAS.Fluid.HeatPumps.Data.ScrollWaterToWater.Heating.ClimateMaster_TMW036_12kW_4_90COP_R410A(),
+      m1_flow_nominal=fan2.m_flow_nominal,
+      m2_flow_nominal=fan3.m_flow_nominal,
+      scaling_factor=2,
+      dp1_nominal=0,
+      dp2_nominal=0,
+      enable_variable_speed=false,
+      T1_start=308.15,
+      T2_start=283.15)
+      annotation (Placement(transformation(extent={{10,-10},{-10,10}},
+          rotation=270,
+          origin={-36,48})));
+    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium =
+          Medium, borFieDat=
+          IDEAS.Fluid.Geothermal.Borefields.Data.Borefield.Example(
+          filDat=IDEAS.Fluid.Geothermal.Borefields.Data.Filling.Bentonite(
+            kFil=0.6,
+            cFil=1650,
+            dFil=1000,
+            steadyState=true),
+          soiDat=IDEAS.Fluid.Geothermal.Borefields.Data.Soil.SandStone(
+            kSoi=2.2,
+            cSoi=2470,
+            dSoi=1000),
+          conDat=IDEAS.Fluid.Geothermal.Borefields.Data.Configuration.Example(
+            borCon=IDEAS.Fluid.Geothermal.Borefields.Types.BoreholeConfiguration.SingleUTube,
+            use_Rb=true,
+            Rb=0.266,
+            mBor_flow_nominal=6.5/18,
+            mBorFie_flow_nominal=6.5,
+            hBor=100,
+            dBor=1,
+            nBor=18,
+            cooBor={{0,0},{0,6},{6,0},{6,6},{0,12},{6,12},{12,12},{12,6},{12,0},{0,
+              18},{6,18},{12,18},{18,18},{18,12},{18,6},{18,0},{0,24},{6,24}},
+            kTub=0.38)))
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={-66,-28})));
+    IDEAS.Fluid.HeatExchangers.ConstantEffectiveness hex(
+      redeclare package Medium1 = Medium,
+      redeclare package Medium2 = Medium,
+      eps=0.8,
+      m1_flow_nominal=fan3.m_flow_nominal,
+      m2_flow_nominal=fan3.m_flow_nominal,
+      dp1_nominal=0,
+      dp2_nominal=0)                                     annotation (Placement(
+          transformation(
+          extent={{-10,10},{10,-10}},
+          rotation=270,
+          origin={8,8})));
+    IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveSwitch
+                                                threeWayValveSwitch(
+      redeclare package Medium = Medium,
+      m_flow_nominal=fan3.m_flow_nominal,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+                                                    annotation (Placement(
+          transformation(
+          extent={{8,-8},{-8,8}},
+          rotation=90,
+          origin={-88,18})));
+    IDEAS.Fluid.Sources.Boundary_pT bou(
+      redeclare package Medium = Medium,
+      nPorts=1,
+      p=150000)
+      annotation (Placement(transformation(extent={{-120,52},{-106,66}})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan3(
+      redeclare IDEAS.Fluid.Movers.Data.Generic per,
+      redeclare package Medium = Medium,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      addPowerToMedium=false,
+      tau=60,
+      use_inputFilter=false,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      m_flow_nominal=6,
+      inputType=IDEAS.Fluid.Types.InputType.Constant)
+      annotation (Placement(transformation(extent={{-9,-8},{9,8}},
+          rotation=90,
+          origin={-88,-5})));
+    IDEAS.Fluid.Sources.Boundary_pT bou1(
+      redeclare package Medium = Medium,
+      p=150000,
+      nPorts=1)
+      annotation (Placement(transformation(extent={{-7,-7},{7,7}},
+          rotation=270,
+          origin={105,77})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0,
+      initType=Modelica.Blocks.Types.Init.SteadyState,
+      T_start=297.15)
+      annotation (Placement(transformation(extent={{74,-64},{60,-76}})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem1(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0,
+      initType=Modelica.Blocks.Types.Init.SteadyState,
+      T_start=297.15)
+      annotation (Placement(transformation(extent={{34,-64},{20,-76}})));
+    IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveMotor
+                                                threeWayValveMotor(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      m_flow_nominal=6,
+      allowFlowReversal=true,
+      T_start=297.15)                               annotation (Placement(
+          transformation(
+          extent={{-8,8},{8,-8}},
+          rotation=270,
+          origin={20,-16})));
+    IDEAS.Fluid.FixedResistances.Junction jun(
+      redeclare package Medium = Medium,
+      m_flow_nominal={6,6,6},
+      dp_nominal={0,0,0},
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      T_start=303.15)
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=270,
+          origin={76,-16})));
+    IDEAS.Fluid.FixedResistances.Junction jun1(
+      redeclare package Medium = Medium,
+      m_flow_nominal={6,6,6},
+      dp_nominal={0,0,0},
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={-40,-28})));
+    IDEAS.Fluid.MixingVolumes.MixingVolume vol1(
+      V=1200*2.8,
+      m_flow_nominal=0,
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      nPorts=1,
+      p_start=100000,
+      T_start=294.15)   annotation (Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={4,-96})));
+    Modelica.Blocks.Sources.BooleanConstant booleanConstant(k=false)
+      annotation (Placement(transformation(extent={{-140,8},{-120,28}})));
+    Modelica.Blocks.Sources.BooleanConstant booleanConstant1(k=false)
+      annotation (Placement(transformation(extent={{120,8},{100,28}})));
+    Modelica.Blocks.Sources.Step step(
+      offset=0,
+      startTime=200,
+      height=6)
+      annotation (Placement(transformation(extent={{-64,-80},{-44,-60}})));
+    Modelica.Blocks.Sources.IntegerConstant integerConstant(k=1)
+      annotation (Placement(transformation(extent={{-80,84},{-60,104}})));
+    IDEAS.Fluid.Sources.Boundary_pT bou2(
+      redeclare package Medium = Medium,
+      nPorts=1,
+      p=100000)
+      annotation (Placement(transformation(extent={{-7,-7},{7,7}},
+          rotation=270,
+          origin={-37,-111})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem2(
+      redeclare package Medium = Medium,
+      m_flow_nominal=6,
+      T_start=283.15)
+      annotation (Placement(transformation(extent={{-56,48},{-76,68}})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem3(
+      redeclare package Medium = Medium,
+      m_flow_nominal=1,
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{22,48},{2,68}})));
+  equation
+    connect(fan2.port_b,vol. ports[2])
+      annotation (Line(points={{54,58},{69.56,58},{69.56,86}},
+                                                         color={0,127,255}));
+    connect(heaPum.port_a1,vol. ports[3])
+      annotation (Line(points={{-30,38},{71,38},{71,86}}, color={0,127,255}));
+    connect(fan3.port_a,borFie. port_b) annotation (Line(points={{-88,-14},{-88,
+            -28},{-76,-28}}, color={0,127,255}));
+    connect(threeWayValveSwitch.port_b,fan3. port_b)
+      annotation (Line(points={{-88,10},{-88,4}}, color={0,127,255}));
+    connect(threeWayValveSwitch.port_a2,hex. port_a1)
+      annotation (Line(points={{-80,18},{2,18}}, color={0,127,255}));
+    connect(threeWayValveSwitch1.port_a2,hex. port_b2)
+      annotation (Line(points={{68,18},{14,18}}, color={0,127,255}));
+    connect(embeddedPipe.port_a,senTem. port_b)
+      annotation (Line(points={{56,-70},{60,-70}}, color={0,127,255}));
+    connect(fan1.port_b,senTem. port_a) annotation (Line(points={{76,-60},{76,
+            -70},{74,-70}}, color={0,127,255}));
+    connect(embeddedPipe.port_b,senTem1. port_a)
+      annotation (Line(points={{36,-70},{34,-70}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_b,senTem1. port_b)
+      annotation (Line(points={{20,-24},{20,-70}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1,hex. port_a2) annotation (Line(points={{20,-8},
+            {18,-8},{18,-2},{14,-2}},          color={0,127,255}));
+    connect(vol.ports[4],threeWayValveSwitch1. port_a1) annotation (Line(points={{72.44,
+            86},{76,86},{76,26}},        color={0,127,255}));
+    connect(threeWayValveMotor.port_a2, jun.port_3)
+      annotation (Line(points={{28,-16},{66,-16}}, color={0,127,255}));
+    connect(threeWayValveSwitch1.port_b, jun.port_1)
+      annotation (Line(points={{76,10},{76,-6}}, color={0,127,255}));
+    connect(fan1.port_a, jun.port_2)
+      annotation (Line(points={{76,-44},{76,-26}}, color={0,127,255}));
+    connect(heaPum.port_b2, jun1.port_3)
+      annotation (Line(points={{-42,38},{-42,10},{-40,10},{-40,-18}},
+                                                             color={0,127,255}));
+    connect(borFie.port_a, jun1.port_2)
+      annotation (Line(points={{-56,-28},{-50,-28}}, color={0,127,255}));
+    connect(hex.port_b1, jun1.port_1) annotation (Line(points={{2,-2},{-8,-2},{
+            -8,-28},{-30,-28}},
+                             color={0,127,255}));
+    connect(embeddedPipe.heatPortEmb[1], vol1.heatPort)
+      annotation (Line(points={{46,-80},{46,-96},{14,-96}}, color={191,0,0}));
+    connect(threeWayValveSwitch.switch, booleanConstant.y)
+      annotation (Line(points={{-94.4,18},{-119,18}}, color={255,0,255}));
+    connect(threeWayValveSwitch1.switch, booleanConstant1.y)
+      annotation (Line(points={{82.4,18},{99,18}},  color={255,0,255}));
+    connect(threeWayValveMotor.ctrl, step.y) annotation (Line(points={{11.36,
+            -16},{0,-16},{0,-70},{-43,-70}},
+                                        color={0,0,127}));
+    connect(heaPum.stage, integerConstant.y) annotation (Line(points={{-33,36},
+            {-32,36},{-32,24},{-50,24},{-50,94},{-59,94}}, color={255,127,0}));
+    connect(bou2.ports[1], vol1.ports[1]) annotation (Line(points={{-37,-118},{
+            -18,-118},{-18,-86},{4,-86}}, color={0,127,255}));
+    connect(threeWayValveSwitch.port_a1, senTem2.port_b) annotation (Line(
+          points={{-88,26},{-88,58},{-76,58}}, color={0,127,255}));
+    connect(bou.ports[1], senTem2.port_b) annotation (Line(points={{-106,59},{
+            -97,59},{-97,58},{-76,58}}, color={0,127,255}));
+    connect(heaPum.port_a2, senTem2.port_a)
+      annotation (Line(points={{-42,58},{-56,58}}, color={0,127,255}));
+    connect(hex.port_b2, vol.ports[5]) annotation (Line(points={{14,18},{16,18},
+            {16,32},{73.88,32},{73.88,86}}, color={0,127,255}));
+    connect(bou1.ports[1], threeWayValveSwitch1.port_a1) annotation (Line(
+          points={{105,70},{90,70},{90,60},{76,60},{76,26}}, color={0,127,255}));
+    connect(heaPum.port_b1, senTem3.port_b)
+      annotation (Line(points={{-30,58},{2,58}}, color={0,127,255}));
+    connect(senTem3.port_a, fan2.port_a)
+      annotation (Line(points={{22,58},{38,58}}, color={0,127,255}));
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-260,-220},
+              {260,140}})), Diagram(coordinateSystem(preserveAspectRatio=false,
+            extent={{-260,-220},{260,140}})));
+  end PI_fan_tuning;
+
+  model PIDcontrol
+    "Example model for the heater with prescribed outlet temperature and air as the medium"
+    extends Modelica.Icons.Example;
+    extends IDEAS.Fluid.HeatExchangers.Examples.BaseClasses.Heater(
+      redeclare package Medium = IDEAS.Media.Air,
+      m_flow_nominal=V*1.2*6/3600,
+      Q_flow_nominal=30*6*6,
+      mov(dp_nominal=1200, nominalValuesDefineDefaultPressureCurve=true),
+      TOut(y=273.15 + 16));
+
+    IDEAS.Controls.SetPoints.Table
+                             tab(table=[0,273.15 + 15; 1,273.15 + 30])
+      "Temperature set point"
+      annotation (Placement(transformation(extent={{-32,20},{-12,40}})));
+    IDEAS.Fluid.HeatExchangers.Heater_T
+             hea(
+      redeclare package Medium = Medium,
+      m_flow_nominal=m_flow_nominal,
+      dp_nominal=1000,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.FixedInitial,
+      QMax_flow=Q_flow_nominal) "Heater"
+      annotation (Placement(transformation(extent={{-8,-50},{12,-30}})));
+  equation
+    connect(conPI.y, tab.u)
+      annotation (Line(points={{-39,30},{-34,30}}, color={0,0,127}));
+    connect(mov.port_b, hea.port_a)
+      annotation (Line(points={{-50,-40},{-8,-40}}, color={0,127,255}));
+    connect(THeaOut.port_a, hea.port_b)
+      annotation (Line(points={{20,-40},{12,-40}}, color={0,127,255}));
+    connect(tab.y, hea.TSet)
+      annotation (Line(points={{-11,30},{-10,30},{-10,-32}}, color={0,0,127}));
+    annotation ( Documentation(info="<html>
+<p>
+This example illustrates how to use the heater model that takes as an
+input the leaving fluid temperature.
+</p>
+<p>
+The model consist of an air volume with heat loss to the ambient.
+The set point of the air temperature is different between night and day.
+The heater tracks the set point temperature, except for the periods in
+which the air temperature is above the set point.
+</p>
+<p>
+See
+<a href=\"modelica://IDEAS.Fluid.HeatExchangers.Examples.AirHeater_u\">
+IDEAS.Fluid.HeatExchangers.Examples.AirHeater_u</a>
+for a model that takes the heating power as an input.
+</p>
+</html>",   revisions="<html>
+<ul>
+<li>
+May 8, 2017, by Michael Wetter:<br/>
+Updated heater model.<br/>
+This is for
+<a href=\"https://github.com/ibpsa/modelica-ibpsa/issues/763\">
+IDEAS, #763</a>.
+</li>
+<li>
+January 6, 2015, by Michael Wetter:<br/>
+Revised implementation.
+</li>
+<li>
+November 12, 2014, by Michael Wetter:<br/>
+First implementation.
+</li>
+</ul>
+</html>"),
+      __Dymola_Commands(file= "modelica://IDEAS/Resources/Scripts/Dymola/Fluid/HeatExchangers/Examples/AirHeater_T.mos"
+          "Simulate and plot"),
+      experiment(
+        StopTime=172800,
+        Tolerance=1e-08),
+      Diagram(coordinateSystem(extent={{-100,-100},{120,100}})),
+      Icon(coordinateSystem(extent={{-100,-100},{120,100}})));
+  end PIDcontrol;
+
+  model HoldTest "Model to hold a value of a function at a given time"
+    HoldPermanent holdPermanent(startTime=0.5)
+      annotation (Placement(transformation(extent={{-28,12},{-8,32}})));
+    Modelica.Blocks.Sources.Cosine cosine(amplitude=1, freqHz=1)
+      annotation (Placement(transformation(extent={{-68,12},{-48,32}})));
+  equation
+    connect(holdPermanent.u, cosine.y)
+      annotation (Line(points={{-30,22},{-47,22}}, color={0,0,127}));
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
+          coordinateSystem(preserveAspectRatio=false)));
+  end HoldTest;
+
+  block HoldPermanent "Hold value of a function permanent"
+    extends Modelica.Blocks.Interfaces.DiscreteSISO;
+
+  equation
+    when sampleTrigger and not
+                              (time > startTime) then
+      y = u;
+    end when;
+
+  end HoldPermanent;
+
+  model SimInfoManagar_constant "Keeps wheater data constant"
+    extends IDEAS.BoundaryConditions.SimInfoManager;
+    HoldPermanent HDirTil(startTime=43200)
+      annotation (Placement(transformation(extent={{134,88},{140,94}})));
+    HoldPermanent HSkyDifTil
+      annotation (Placement(transformation(extent={{134,78},{140,84}})));
+    HoldPermanent HGroDifTil
+      annotation (Placement(transformation(extent={{134,68},{140,74}})));
+    HoldPermanent angInc
+      annotation (Placement(transformation(extent={{134,58},{140,64}})));
+    HoldPermanent angZenHold
+      annotation (Placement(transformation(extent={{134,48},{140,54}})));
+    HoldPermanent angAzi
+      annotation (Placement(transformation(extent={{134,38},{140,44}})));
+    HoldPermanent Tenv
+      annotation (Placement(transformation(extent={{134,28},{140,34}})));
+    HoldPermanent TeHold
+      annotation (Placement(transformation(extent={{134,18},{140,24}})));
+  equation
+    connect(HGloHor.y, HGloHor.u)
+      annotation (Line(points={{-77.6,112},{-86.8,112}}, color={0,0,127}));
+    annotation (Diagram(coordinateSystem(extent={{-100,-100},{180,100}})), Icon(
+          coordinateSystem(extent={{-100,-100},{180,100}})));
+  end SimInfoManagar_constant;
+
+  model RBC_nightSetBack
+    package Medium = IDEAS.Media.Water;
+    UpscaleCase900 upscaleCase900_HVAC
+      annotation (Placement(transformation(extent={{-62,-112},{-32,-92}})));
+    IDEAS.Fluid.HeatExchangers.RadiantSlab.EmbeddedPipe embeddedPipe(
+      redeclare package Medium = Medium,
+      A_floor=1200,
+      redeclare IDEAS.Fluid.HeatExchangers.RadiantSlab.BaseClasses.FH_Standard1
+        RadSlaCha,
+      m_flow_nominal=6,
+      T_start=308.15)
+      annotation (Placement(transformation(
+          extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={46,-70})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan1(
+      redeclare package Medium = Medium,
+      addPowerToMedium=false,
+      tau=60,
+      constantMassFlowRate=1,
+      inputType=IDEAS.Fluid.Types.InputType.Continuous,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      use_inputFilter=false,
+      T_start=308.15,
+      m_flow_nominal=6)
+      annotation (Placement(transformation(extent={{-8,-8},{8,8}},
+          rotation=270,
+          origin={76,-52})));
+    IDEAS.Fluid.MixingVolumes.MixingVolume vol(
+      redeclare package Medium = Medium,
+      nPorts=5,
+      m_flow_nominal=fan3.m_flow_nominal,
+      V=10,
+      T_start=308.15)
+                annotation (Placement(transformation(
+          extent={{-9,-8},{9,8}},
+          rotation=0,
+          origin={43,64})));
+    IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveSwitch
+                                                threeWayValveSwitch1(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      m_flow_nominal=6,
+      T_start=308.15)                               annotation (Placement(
+          transformation(
+          extent={{-8,-8},{8,8}},
+          rotation=270,
+          origin={76,18})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan2(
+      redeclare package Medium = Medium,
+      addPowerToMedium=false,
+      tau=60,
+      constantMassFlowRate=1,
+      inputType=IDEAS.Fluid.Types.InputType.Continuous,
+      use_inputFilter=false,
+      m_flow_nominal=6,
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{-8,-8},{8,8}},
+          rotation=0,
+          origin={6,52})));
+    IDEAS.Fluid.HeatPumps.ScrollWaterToWater  heaPum(
+      redeclare package Medium1 = Medium,
+      redeclare package Medium2 = Medium,
+      allowFlowReversal1=false,
+      allowFlowReversal2=false,
+      redeclare package ref = IDEAS.Media.Refrigerants.R410A,
+      datHeaPum=
+          IDEAS.Fluid.HeatPumps.Data.ScrollWaterToWater.Heating.ClimateMaster_TMW036_12kW_4_90COP_R410A(),
+      m1_flow_nominal=fan2.m_flow_nominal,
+      m2_flow_nominal=fan3.m_flow_nominal,
+      enable_variable_speed=false,
+      dp1_nominal=0,
+      dp2_nominal=0,
+      scaling_factor=4)
+      annotation (Placement(transformation(extent={{10,-10},{-10,10}},
+          rotation=270,
+          origin={-20,42})));
+
+    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium
+        = Medium, borFieDat=
+          IDEAS.Fluid.Geothermal.Borefields.Data.Borefield.Example(
+            filDat=IDEAS.Fluid.Geothermal.Borefields.Data.Filling.Bentonite(
+              kFil=0.6,
+              cFil=1650,
+              dFil=1000,
+              steadyState=true),
+            soiDat=IDEAS.Fluid.Geothermal.Borefields.Data.Soil.SandStone(
+              kSoi=2.2,
+              cSoi=2470,
+              dSoi=1000),
+            conDat=IDEAS.Fluid.Geothermal.Borefields.Data.Configuration.Example(
+              borCon=IDEAS.Fluid.Geothermal.Borefields.Types.BoreholeConfiguration.SingleUTube,
+              use_Rb=true,
+              Rb=0.266,
+              mBor_flow_nominal=6.5/18,
+              mBorFie_flow_nominal=6.5,
+              hBor=100,
+              dBor=1,
+              nBor=18,
+              cooBor={{0,0},{0,6},{6,0},{6,6},{0,12},{6,12},{12,12},{12,6},{12,
+              0},{0,18},{6,18},{12,18},{18,18},{18,12},{18,6},{18,0},{0,24},{6,
+              24}},
+              kTub=0.38)))
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={-66,-28})));
+    IDEAS.Fluid.HeatExchangers.ConstantEffectiveness hex(
+      redeclare package Medium1 = Medium,
+      redeclare package Medium2 = Medium,
+      eps=0.8,
+      m1_flow_nominal=fan3.m_flow_nominal,
+      dp1_nominal=0,
+      dp2_nominal=0,
+      m2_flow_nominal=6)                                 annotation (Placement(
+          transformation(
+          extent={{-10,10},{10,-10}},
+          rotation=270,
+          origin={8,8})));
+    IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveSwitch
+                                                threeWayValveSwitch(
+      redeclare package Medium = Medium,
+      m_flow_nominal=fan3.m_flow_nominal,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+                                                    annotation (Placement(
+          transformation(
+          extent={{8,-8},{-8,8}},
+          rotation=90,
+          origin={-78,18})));
+    IDEAS.Fluid.Sources.Boundary_pT bou(
+      redeclare package Medium = Medium,
+      nPorts=1,
+      p=150000)
+      annotation (Placement(transformation(extent={{-98,52},{-84,66}})));
+    IDEAS.Fluid.Movers.FlowControlled_m_flow fan3(
+      redeclare IDEAS.Fluid.Movers.Data.Generic per,
+      redeclare package Medium = Medium,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      addPowerToMedium=false,
+      tau=60,
+      use_inputFilter=false,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      inputType=IDEAS.Fluid.Types.InputType.Continuous,
+      m_flow_nominal=6)
+      annotation (Placement(transformation(extent={{-9,-8},{9,8}},
+          rotation=90,
+          origin={-78,-5})));
+    HeatingCoolingSet heatingCoolingSet
+      annotation (Placement(transformation(extent={{-250,108},{-228,130}})));
+    IDEAS.Fluid.Sources.Boundary_pT bou1(
+      redeclare package Medium = Medium,
+      nPorts=1,
+      p=150000)
+      annotation (Placement(transformation(extent={{-7,-7},{7,7}},
+          rotation=270,
+          origin={77,77})));
+    Modelica.Blocks.Logical.Hysteresis
+                                     hysteresis(
+      pre_y_start=false,
+      uLow=273.15 + 32,
+      uHigh=273.15 + 37)
+             annotation (Placement(transformation(extent={{136,56},{154,74}})));
+    Modelica.Thermal.HeatTransfer.Sensors.TemperatureSensor temperatureSensor
+      annotation (Placement(transformation(extent={{34,80},{48,94}})));
+    Modelica.Blocks.Math.RealToBoolean realToBoolean
+      annotation (Placement(transformation(extent={{-218,114},{-206,126}})));
+    Modelica.Blocks.Logical.Not not1
+      annotation (Placement(transformation(extent={{-192,114},{-180,126}})));
+    Modelica.Blocks.Math.BooleanToReal booleanToReal
+      annotation (Placement(transformation(extent={{170,20},{184,34}})));
+    Modelica.Blocks.Logical.Not not2
+      annotation (Placement(transformation(extent={{168,58},{182,72}})));
+    Modelica.Blocks.Logical.And and1
+      annotation (Placement(transformation(extent={{144,20},{158,34}})));
+    Modelica.Blocks.Logical.Not not3
+      annotation (Placement(transformation(extent={{106,0},{120,14}})));
+    Modelica.Blocks.Math.RealToInteger realToInteger1
+      annotation (Placement(transformation(extent={{210,20},{224,34}})));
+    Modelica.Blocks.Logical.Or or1
+      annotation (Placement(transformation(extent={{-152,-12},{-138,2}})));
+    Modelica.Blocks.Math.Gain gain(k=6) annotation (Placement(transformation(
+          extent={{-8,-8},{8,8}},
+          rotation=270,
+          origin={6,82})));
+    Modelica.Blocks.Math.BooleanToReal booleanToReal1
+      annotation (Placement(transformation(extent={{-132,-12},{-118,2}})));
+    Modelica.Blocks.Math.Gain gain1(k=6) annotation (Placement(transformation(
+          extent={{-7,-7},{7,7}},
+          rotation=0,
+          origin={-103,-5})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0,
+      initType=Modelica.Blocks.Types.Init.SteadyState,
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{74,-64},{60,-76}})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem1(
+      m_flow_nominal=6,
+      redeclare package Medium = Medium,
+      tau=0,
+      initType=Modelica.Blocks.Types.Init.SteadyState,
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{34,-64},{20,-76}})));
+    IDEAS.Fluid.Actuators.Valves.Simplified.ThreeWayValveMotor
+                                                threeWayValveMotor(
+      redeclare package Medium = Medium,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      allowFlowReversal=true,
+      T_start=308.15,
+      m_flow_nominal=6)                             annotation (Placement(
+          transformation(
+          extent={{-8,8},{8,-8}},
+          rotation=270,
+          origin={20,-38})));
+    IDEAS.Controls.Continuous.LimPID conPID(
+      controllerType=Modelica.Blocks.Types.SimpleController.PI,
+      yMax=1,
+      xi_start=0,
+      k=1,
+      yMin=0,
+      Ti=60)
+      annotation (Placement(transformation(extent={{156,-116},{172,-100}})));
+    IDEAS.Controls.Continuous.LimPID conPID1(
+      controllerType=Modelica.Blocks.Types.SimpleController.PI,
+      yMax=1,
+      xi_start=1,
+      k=1,
+      yMin=0,
+      Ti=60)
+      annotation (Placement(transformation(extent={{-110,-76},{-94,-60}})));
+    Modelica.Blocks.Math.Gain gain2(k=6) annotation (Placement(transformation(
+          extent={{-7,-7},{7,7}},
+          rotation=90,
+          origin={195,-59})));
+    RunningMeanTemperature6h runningMeanTemperature6h
+      annotation (Placement(transformation(extent={{-268,-70},{-250,-50}})));
+    Average6h average6h
+      annotation (Placement(transformation(extent={{48,-118},{68,-98}})));
+    IDEAS.Controls.SetPoints.Table tab(table=[-8.0 + 273,30 + 273; 15 + 273,22
+           + 273])
+      annotation (Placement(transformation(extent={{-210,-52},{-190,-32}})));
+    IDEAS.Controls.SetPoints.Table tab1(table=[21 + 273,20 + 273; 22 + 273,27
+           + 273])
+      annotation (Placement(transformation(extent={{84,-100},{104,-80}})));
+    Modelica.Blocks.Sources.Constant const1(k=1)
+      annotation (Placement(transformation(extent={{154,-86},{170,-70}})));
+    Modelica.Blocks.Math.Add sum2(k2=-1)
+      annotation (Placement(transformation(extent={{186,-108},{206,-88}})));
+    IDEAS.Fluid.FixedResistances.Junction jun(
+      redeclare package Medium = Medium,
+      dp_nominal={0,0,0},
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      m_flow_nominal={6,6,6},
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=270,
+          origin={76,-16})));
+    IDEAS.Fluid.FixedResistances.Junction jun1(
+      redeclare package Medium = Medium,
+      m_flow_nominal={6,6,6},
+      dp_nominal={0,0,0},
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState)
+      annotation (Placement(transformation(extent={{-10,-10},{10,10}},
+          rotation=180,
+          origin={-28,-28})));
+    Modelica.Blocks.Logical.Switch switch2
+      annotation (Placement(transformation(extent={{-154,-78},{-134,-58}})));
+    Modelica.Blocks.Logical.Switch switch3
+      annotation (Placement(transformation(extent={{118,-144},{138,-124}})));
+    IDEAS.Controls.SetPoints.OccupancySchedule occSchWee1(period=7*24*3600,
+        occupancy=3600*{7,19,31,43,55,67,79,91,103,115})        "Week schedule"
+      annotation (Placement(transformation(extent={{-210,-80},{-190,-60}})));
+    IDEAS.Controls.SetPoints.Table tab2(table=[-8 + 273,25 + 273; 15 + 273,17
+           + 273])
+      annotation (Placement(transformation(extent={{-210,-116},{-190,-96}})));
+    IDEAS.Controls.SetPoints.Table tab3(table=[16 + 273,15 + 273; 17 + 273,22
+           + 273])
+      annotation (Placement(transformation(extent={{84,-174},{104,-154}})));
+    IDEAS.Controls.SetPoints.OccupancySchedule occSchWee2(period=7*24*3600,
+        occupancy=3600*{7,19,31,43,55,67,79,91,103,115})        "Week schedule"
+      annotation (Placement(transformation(extent={{84,-138},{104,-118}})));
+  equation
+    connect(upscaleCase900_HVAC.heatPortEmb, embeddedPipe.heatPortEmb)
+      annotation (Line(points={{-32,-96},{46,-96},{46,-80}}, color={191,0,0}));
+    connect(fan2.port_b, vol.ports[2])
+      annotation (Line(points={{14,52},{41.56,52},{41.56,56}},
+                                                         color={0,127,255}));
+    connect(fan2.port_a, heaPum.port_b1)
+      annotation (Line(points={{-2,52},{-14,52}}, color={0,127,255}));
+    connect(heaPum.port_a1, vol.ports[3])
+      annotation (Line(points={{-14,32},{43,32},{43,56}}, color={0,127,255}));
+    connect(bou.ports[1], heaPum.port_a2)
+      annotation (Line(points={{-84,59},{-78,59},{-78,52},{-26,52}},
+                                                   color={0,127,255}));
+    connect(fan3.port_a, borFie.port_b) annotation (Line(points={{-78,-14},{-78,
+            -28},{-76,-28}}, color={0,127,255}));
+    connect(threeWayValveSwitch.port_b, fan3.port_b)
+      annotation (Line(points={{-78,10},{-78,4}}, color={0,127,255}));
+    connect(threeWayValveSwitch.port_a1, heaPum.port_a2) annotation (Line(
+          points={{-78,26},{-78,52},{-26,52}}, color={0,127,255}));
+    connect(threeWayValveSwitch.port_a2, hex.port_a1)
+      annotation (Line(points={{-70,18},{2,18}}, color={0,127,255}));
+    connect(temperatureSensor.port, vol.heatPort) annotation (Line(points={{34,87},
+            {28,87},{28,64},{34,64}},     color={191,0,0}));
+    connect(threeWayValveSwitch1.port_a2, hex.port_b2)
+      annotation (Line(points={{68,18},{14,18}}, color={0,127,255}));
+    connect(threeWayValveSwitch.switch, threeWayValveSwitch1.switch)
+      annotation (Line(points={{-84.4,18},{-116,18},{-116,120},{88,120},{88,18},
+            {82.4,18}}, color={255,0,255}));
+    connect(realToBoolean.y, not1.u)
+      annotation (Line(points={{-205.4,120},{-193.2,120}}, color={255,0,255}));
+    connect(not1.y, threeWayValveSwitch1.switch) annotation (Line(points={{-179.4,
+            120},{88,120},{88,18},{82.4,18}},        color={255,0,255}));
+    connect(not2.u, hysteresis.y)
+      annotation (Line(points={{166.6,65},{154.9,65}}, color={255,0,255}));
+    connect(temperatureSensor.T, hysteresis.u) annotation (Line(points={{48,87},
+            {90,87},{90,65},{134.2,65}}, color={0,0,127}));
+    connect(not2.y, and1.u1) annotation (Line(points={{182.7,65},{190,65},{190,
+            48},{102,48},{102,27},{142.6,27}}, color={255,0,255}));
+    connect(and1.y, booleanToReal.u)
+      annotation (Line(points={{158.7,27},{168.6,27}}, color={255,0,255}));
+    connect(and1.u2, not3.y) annotation (Line(points={{142.6,21.4},{126.65,21.4},
+            {126.65,7},{120.7,7}},   color={255,0,255}));
+    connect(not3.u, threeWayValveSwitch1.switch) annotation (Line(points={{104.6,7},
+            {96,7},{96,14},{88,14},{88,18},{82.4,18}},
+                                                  color={255,0,255}));
+    connect(realToInteger1.y, heaPum.stage) annotation (Line(points={{224.7,27},
+            {228,27},{228,112},{-40,112},{-40,24},{-17,24},{-17,30}}, color={
+            255,127,0}));
+    connect(gain.y, fan2.m_flow_in)
+      annotation (Line(points={{6,73.2},{6,61.6}}, color={0,0,127}));
+    connect(gain.u, booleanToReal.y) annotation (Line(points={{6,91.6},{6,106},
+            {198,106},{198,27},{184.7,27}}, color={0,0,127}));
+    connect(realToInteger1.u, booleanToReal.y)
+      annotation (Line(points={{208.6,27},{184.7,27}}, color={0,0,127}));
+    connect(booleanToReal1.u, or1.y)
+      annotation (Line(points={{-133.4,-5},{-137.3,-5}}, color={255,0,255}));
+    connect(booleanToReal1.y, gain1.u)
+      annotation (Line(points={{-117.3,-5},{-111.4,-5}}, color={0,0,127}));
+    connect(gain1.y, fan3.m_flow_in)
+      annotation (Line(points={{-95.3,-5},{-87.6,-5}}, color={0,0,127}));
+    connect(or1.u1, booleanToReal.u) annotation (Line(points={{-153.4,-5},{-164,
+            -5},{-164,108},{202,108},{202,14},{164,14},{164,27},{168.6,27}},
+          color={255,0,255}));
+    connect(heatingCoolingSet.Setpoint, realToBoolean.u) annotation (Line(
+          points={{-226.9,119.88},{-217.45,119.88},{-217.45,120},{-219.2,120}},
+          color={0,0,127}));
+    connect(or1.u2, threeWayValveSwitch1.switch) annotation (Line(points={{-153.4,
+            -10.6},{-170,-10.6},{-170,120},{88,120},{88,18},{82.4,18}},
+          color={255,0,255}));
+    connect(embeddedPipe.port_a, senTem.port_b)
+      annotation (Line(points={{56,-70},{60,-70}}, color={0,127,255}));
+    connect(fan1.port_b, senTem.port_a) annotation (Line(points={{76,-60},{76,
+            -70},{74,-70}}, color={0,127,255}));
+    connect(embeddedPipe.port_b, senTem1.port_a)
+      annotation (Line(points={{36,-70},{34,-70}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_b, senTem1.port_b)
+      annotation (Line(points={{20,-46},{20,-52},{16,-52},{16,-70},{20,-70}},
+                                                   color={0,127,255}));
+    connect(gain2.y, fan1.m_flow_in) annotation (Line(points={{195,-51.3},{88,
+            -51.3},{88,-52},{85.6,-52}}, color={0,0,127}));
+    connect(upscaleCase900_HVAC.TSensor[1], average6h.Input_average)
+      annotation (Line(points={{-31.4,-108},{46,-108}},
+          color={0,0,127}));
+    connect(runningMeanTemperature6h.TRm, tab.u)
+      annotation (Line(points={{-249.46,-60},{-236,-60},{-236,-42},{-212,-42}},
+                                                        color={0,0,127}));
+    connect(average6h.TRm, tab1.u)
+      annotation (Line(points={{68.6,-108},{76,-108},{76,-90},{82,-90}},
+                                                         color={0,0,127}));
+    connect(vol.ports[4], threeWayValveSwitch1.port_a1) annotation (Line(points={{44.44,
+            56},{76,56},{76,26}},        color={0,127,255}));
+    connect(bou1.ports[1], threeWayValveSwitch1.port_a1)
+      annotation (Line(points={{77,70},{76,70},{76,26}}, color={0,127,255}));
+    connect(senTem.T, conPID1.u_m) annotation (Line(points={{67,-76.6},{66,
+            -76.6},{66,-84},{-102,-84},{-102,-77.6}},  color={0,0,127}));
+    connect(senTem1.T, conPID.u_m) annotation (Line(points={{27,-76.6},{27,-182},
+            {164,-182},{164,-117.6}}, color={0,0,127}));
+    connect(conPID1.y, threeWayValveMotor.ctrl) annotation (Line(points={{-93.2,
+            -68},{11.36,-68},{11.36,-38}},                         color={0,0,
+            127}));
+    connect(threeWayValveMotor.port_a2, jun.port_3)
+      annotation (Line(points={{28,-38},{58,-38},{58,-16},{66,-16}},
+                                                   color={0,127,255}));
+    connect(threeWayValveSwitch1.port_b, jun.port_1)
+      annotation (Line(points={{76,10},{76,-6}}, color={0,127,255}));
+    connect(fan1.port_a, jun.port_2)
+      annotation (Line(points={{76,-44},{76,-26}}, color={0,127,255}));
+    connect(heaPum.port_b2, jun1.port_3) annotation (Line(points={{-26,32},{-28,
+            32},{-28,-18}}, color={0,127,255}));
+    connect(borFie.port_a, jun1.port_2)
+      annotation (Line(points={{-56,-28},{-38,-28}}, color={0,127,255}));
+    connect(hex.port_b1, jun1.port_1) annotation (Line(points={{2,-2},{-8,-2},{
+            -8,-28},{-18,-28}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, hex.port_a2) annotation (Line(points={{
+            20,-30},{18,-30},{18,-2},{14,-2}}, color={0,127,255}));
+    connect(threeWayValveMotor.port_a1, vol.ports[5]) annotation (Line(points={
+            {20,-30},{45.88,-30},{45.88,56}}, color={0,127,255}));
+    connect(sum2.u1, const1.y) annotation (Line(points={{184,-92},{176,-92},{
+            176,-78},{170.8,-78}}, color={0,0,127}));
+    connect(tab.y, switch2.u1) annotation (Line(points={{-189,-42},{-178,-42},{
+            -178,-60},{-156,-60}}, color={0,0,127}));
+    connect(conPID1.u_s, switch2.y)
+      annotation (Line(points={{-111.6,-68},{-133,-68}}, color={0,0,127}));
+    connect(conPID.y, sum2.u2) annotation (Line(points={{172.8,-108},{178,-108},
+            {178,-104},{184,-104}}, color={0,0,127}));
+    connect(tab1.y, switch3.u1) annotation (Line(points={{105,-90},{110,-90},{
+            110,-126},{116,-126}}, color={0,0,127}));
+    connect(switch3.y, conPID.u_s) annotation (Line(points={{139,-134},{139,
+            -118},{154.4,-118},{154.4,-108}}, color={0,0,127}));
+    connect(tab2.y, switch2.u3) annotation (Line(points={{-189,-106},{-174,-106},
+            {-174,-76},{-156,-76}}, color={0,0,127}));
+    connect(tab2.u, runningMeanTemperature6h.TRm) annotation (Line(points={{
+            -212,-106},{-236,-106},{-236,-60},{-249.46,-60}}, color={0,0,127}));
+    connect(tab3.y, switch3.u3) annotation (Line(points={{105,-164},{110,-164},
+            {110,-142},{116,-142}}, color={0,0,127}));
+    connect(tab3.u, average6h.TRm) annotation (Line(points={{82,-164},{76,-164},
+            {76,-108},{68.6,-108}}, color={0,0,127}));
+    connect(sum2.y, gain2.u) annotation (Line(points={{207,-98},{222,-98},{222,
+            -74},{195,-74},{195,-67.4}}, color={0,0,127}));
+    connect(occSchWee2.occupied, switch3.u2)
+      annotation (Line(points={{105,-134},{116,-134}}, color={255,0,255}));
+    connect(occSchWee1.occupied, switch2.u2) annotation (Line(points={{-189,-76},
+            {-184,-76},{-184,-74},{-178,-74},{-178,-68},{-156,-68}}, color={255,
+            0,255}));
+    annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-280,
+              -220},{280,160}})),                                  Diagram(
+          coordinateSystem(preserveAspectRatio=false, extent={{-280,-220},{280,
+              160}})),
+      experiment(
+        StopTime=31536000,
+        __Dymola_NumberOfIntervals=15000,
+        Tolerance=1e-06,
+        __Dymola_fixedstepsize=20,
+        __Dymola_Algorithm="Euler"),
+      __Dymola_experimentSetupOutput,
+      __Dymola_experimentFlags(
+        Advanced(GenerateVariableDependencies=false, OutputModelicaCode=false),
+        Evaluate=false,
+        OutputCPUtime=false,
+        OutputFlatModelica=false));
+  end RBC_nightSetBack;
   annotation (uses(IDEAS(version="2.0.0"), Modelica(version="3.2.2")));
 end Thesis_Bram_Stockman;
