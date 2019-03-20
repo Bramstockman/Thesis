@@ -1214,6 +1214,8 @@ Corrected wrong value in implementation.
       inputType=IDEAS.Fluid.Types.InputType.Continuous,
       use_inputFilter=false,
       m_flow_nominal=2,
+      energyDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
+      massDynamics=Modelica.Fluid.Types.Dynamics.SteadyState,
       T_start=308.15)
       annotation (Placement(transformation(extent={{-8,-8},{8,8}},
           rotation=0,
@@ -1236,8 +1238,8 @@ Corrected wrong value in implementation.
           rotation=270,
           origin={-20,42})));
 
-    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium
-        = Medium, borFieDat=
+    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium =
+          Medium, borFieDat=
           IDEAS.Fluid.Geothermal.Borefields.Data.Borefield.Example(
             filDat=IDEAS.Fluid.Geothermal.Borefields.Data.Filling.Bentonite(
               kFil=0.6,
@@ -1427,6 +1429,13 @@ Corrected wrong value in implementation.
       annotation (Placement(transformation(extent={{-10,-10},{10,10}},
           rotation=180,
           origin={-28,-28})));
+    IDEAS.Fluid.Sensors.TemperatureTwoPort senTem2(
+      redeclare package Medium = Medium,
+      tau=0,
+      initType=Modelica.Blocks.Types.Init.SteadyState,
+      m_flow_nominal=1,
+      T_start=308.15)
+      annotation (Placement(transformation(extent={{36,24},{22,12}})));
   equation
     connect(upscaleCase900_HVAC.heatPortEmb, embeddedPipe.heatPortEmb)
       annotation (Line(points={{-28,-166},{42,-166},{42,-108}},
@@ -1451,8 +1460,6 @@ Corrected wrong value in implementation.
       annotation (Line(points={{-70,18},{2,18}}, color={0,127,255}));
     connect(temperatureSensor.port, vol.heatPort) annotation (Line(points={{34,87},
             {28,87},{28,64},{34,64}},     color={191,0,0}));
-    connect(threeWayValveSwitch1.port_a2, hex.port_b2)
-      annotation (Line(points={{68,18},{14,18}}, color={0,127,255}));
     connect(threeWayValveSwitch.switch, threeWayValveSwitch1.switch)
       annotation (Line(points={{-84.4,18},{-116,18},{-116,120},{88,120},{88,18},
             {82.4,18}}, color={255,0,255}));
@@ -1557,6 +1564,10 @@ Corrected wrong value in implementation.
       annotation (Line(points={{-111.6,-68},{-131,-68}}, color={0,0,127}));
     connect(tab1.y, conPID.u_s)
       annotation (Line(points={{139,-178},{158.4,-178}}, color={0,0,127}));
+    connect(senTem2.port_b, hex.port_b2)
+      annotation (Line(points={{22,18},{14,18}}, color={0,127,255}));
+    connect(senTem2.port_a, threeWayValveSwitch1.port_a2)
+      annotation (Line(points={{36,18},{68,18}}, color={0,127,255}));
     annotation (Icon(coordinateSystem(preserveAspectRatio=false, extent={{-280,
               -220},{280,160}})),                                  Diagram(
           coordinateSystem(preserveAspectRatio=false, extent={{-280,-220},{280,
@@ -1854,7 +1865,7 @@ First implementation.
           transformation(
           extent={{-10,-10},{10,10}},
           rotation=180,
-          origin={-120,-82})));
+          origin={-122,-138})));
     IDEAS.Fluid.Sources.Boundary_pT
                         bouAir(
       redeclare package Medium = MediumAir,
@@ -1862,9 +1873,9 @@ First implementation.
       nPorts=2)      "Air boundary with constant temperature"
       annotation (Placement(transformation(
           extent={{-10,10},{10,-10}},
-          origin={-158,-78})));
+          origin={-170,-142})));
     Modelica.Blocks.Sources.RealExpression realExpression(y=sim.Te)
-      annotation (Placement(transformation(extent={{-196,-92},{-176,-72}})));
+      annotation (Placement(transformation(extent={{-240,-106},{-220,-86}})));
     IDEAS.Fluid.HeatExchangers.ConstantEffectiveness heating_coil(
       eps=0.8,
       dp1_nominal=0,
@@ -1875,7 +1886,7 @@ First implementation.
       redeclare package Medium1 = Medium) annotation (Placement(transformation(
           extent={{-10,10},{10,-10}},
           rotation=180,
-          origin={-48,-70})));
+          origin={-56,-98})));
     IDEAS.Fluid.HeatExchangers.ConstantEffectiveness cooling_coil(
       eps=0.8,
       dp1_nominal=0,
@@ -1886,7 +1897,7 @@ First implementation.
       redeclare package Medium1 = Medium) annotation (Placement(transformation(
           extent={{-10,10},{10,-10}},
           rotation=180,
-          origin={-90,-70})));
+          origin={-84,-96})));
     IDEAS.Fluid.Movers.FlowControlled_m_flow fan4(
       addPowerToMedium=false,
       tau=60,
@@ -1900,7 +1911,7 @@ First implementation.
       T_start=297.15)
       annotation (Placement(transformation(extent={{-8,-8},{8,8}},
           rotation=270,
-          origin={-28,-92})));
+          origin={-28,-98})));
     IDEAS.Fluid.Actuators.Dampers.VAVBoxExponential
                                         vavDam(
       redeclare package Medium = MediumAir,
@@ -1909,7 +1920,7 @@ First implementation.
       dp_nominal=1)                     "Damper" annotation (Placement(
           transformation(
           extent={{-10,-10},{10,10}},
-          origin={-28,-122},
+          origin={-26,-130},
           rotation=270)));
     IDEAS.Controls.SetPoints.OccupancySchedule occSch(occupancy=3600*{7,19,31,
           43,55,67,79,91,103,115,127,139}, period=7*24*3600)
@@ -1943,7 +1954,7 @@ First implementation.
           rotation=180,
           origin={-12,-63})));
     Modelica.Blocks.Math.BooleanToInteger booleanToInteger1
-      annotation (Placement(transformation(extent={{-168,-60},{-148,-40}})));
+      annotation (Placement(transformation(extent={{-168,-42},{-148,-22}})));
     Modelica.Blocks.Math.BooleanToInteger booleanToInteger2
       annotation (Placement(transformation(extent={{-40,-278},{-20,-258}})));
     IDEAS.Controls.Continuous.LimPID
@@ -1954,54 +1965,60 @@ First implementation.
       annotation (Placement(transformation(extent={{62,-274},{42,-254}})));
   equation
     connect(bouAir.T_in, realExpression.y)
-      annotation (Line(points={{-170,-82},{-175,-82}}, color={0,0,127}));
-    connect(bouAir.ports[1], hex1.port_b1) annotation (Line(points={{-148,-80},
-            {-132,-80},{-132,-88},{-130,-88}}, color={0,127,255}));
+      annotation (Line(points={{-182,-146},{-182,-96},{-219,-96}},
+                                                       color={0,0,127}));
+    connect(bouAir.ports[1], hex1.port_b1) annotation (Line(points={{-160,-144},
+            {-132,-144}},                      color={0,127,255}));
     connect(hex1.port_a1, upscaleCase900_HVAC.port_b[1]) annotation (Line(
-          points={{-110,-88},{-50,-88},{-50,-150},{-47,-150}}, color={0,127,255}));
+          points={{-112,-144},{-50,-144},{-50,-162},{-45,-162}},
+                                                               color={0,127,255}));
     connect(bouAir.ports[2], hex1.port_a2)
-      annotation (Line(points={{-148,-76},{-130,-76}}, color={0,127,255}));
+      annotation (Line(points={{-160,-140},{-140,-140},{-140,-132},{-132,-132}},
+                                                       color={0,127,255}));
     connect(hex1.port_b2, cooling_coil.port_a2)
-      annotation (Line(points={{-110,-76},{-100,-76}}, color={0,127,255}));
+      annotation (Line(points={{-112,-132},{-106,-132},{-106,-102},{-94,-102}},
+                                                       color={0,127,255}));
     connect(cooling_coil.port_b2, heating_coil.port_a2)
-      annotation (Line(points={{-80,-76},{-58,-76}}, color={0,127,255}));
-    connect(heating_coil.port_b2, fan4.port_a) annotation (Line(points={{-38,
-            -76},{-38,-84},{-28,-84}}, color={0,127,255}));
+      annotation (Line(points={{-74,-102},{-70,-102},{-70,-104},{-66,-104}},
+                                                     color={0,127,255}));
+    connect(heating_coil.port_b2, fan4.port_a) annotation (Line(points={{-46,
+            -104},{-46,-90},{-28,-90}},color={0,127,255}));
     connect(fan4.port_b, vavDam.port_a)
-      annotation (Line(points={{-28,-100},{-28,-112}}, color={0,127,255}));
+      annotation (Line(points={{-28,-106},{-28,-120},{-26,-120}},
+                                                       color={0,127,255}));
     connect(vavDam.port_b, upscaleCase900_HVAC.port_a[1]) annotation (Line(
-          points={{-28,-132},{-42,-132},{-42,-150},{-43,-150}}, color={0,127,
+          points={{-26,-140},{-42,-140},{-42,-162},{-41,-162}}, color={0,127,
             255}));
     connect(occSch.occupied, booleanToInteger.u)
       annotation (Line(points={{-51,-238},{-44,-238}}, color={255,0,255}));
     connect(booleanToInteger.y, fan4.stage) annotation (Line(points={{-21,-238},
-            {-4,-238},{-4,-92},{-18.4,-92}}, color={255,127,0}));
-    connect(cooling_coil.port_a1, hex.port_b2) annotation (Line(points={{-80,
-            -64},{-80,-50},{30,-50},{30,24},{14,24},{14,18}}, color={0,127,255}));
-    connect(cooling_coil.port_b1, fan5.port_a) annotation (Line(points={{-100,
-            -64},{-112,-64},{-112,-60},{-124,-60}}, color={0,127,255}));
+            {-4,-238},{-4,-98},{-18.4,-98}}, color={255,127,0}));
+    connect(cooling_coil.port_a1, hex.port_b2) annotation (Line(points={{-74,-90},
+            {-74,-50},{30,-50},{30,24},{14,24},{14,18}},      color={0,127,255}));
+    connect(cooling_coil.port_b1, fan5.port_a) annotation (Line(points={{-94,-90},
+            {-112,-90},{-112,-60},{-124,-60}},      color={0,127,255}));
     connect(fan5.port_b, hex.port_a2) annotation (Line(points={{-124,-42},{-124,
             -38},{8,-38},{8,-2},{14,-2}}, color={0,127,255}));
     connect(vol.ports[6], heating_coil.port_b1) annotation (Line(points={{43,56},
-            {42,56},{42,-48},{-58,-48},{-58,-64}}, color={0,127,255}));
-    connect(heating_coil.port_a1, fan6.port_b) annotation (Line(points={{-38,
-            -64},{-30,-64},{-30,-63},{-21,-63}}, color={0,127,255}));
+            {42,56},{42,-48},{-66,-48},{-66,-92}}, color={0,127,255}));
+    connect(heating_coil.port_a1, fan6.port_b) annotation (Line(points={{-46,-92},
+            {-30,-92},{-30,-63},{-21,-63}},      color={0,127,255}));
     connect(vol.ports[7], fan6.port_a) annotation (Line(points={{43,56},{50,56},
             {50,-54},{-3,-54},{-3,-63}}, color={0,127,255}));
     connect(fan5.stage, booleanToInteger1.y) annotation (Line(points={{-133.6,
-            -51},{-140,-51},{-140,-50},{-147,-50}}, color={255,127,0}));
-    connect(booleanToInteger1.u, not1.y) annotation (Line(points={{-170,-50},{
-            -174,-50},{-174,120},{-179.4,120}}, color={255,0,255}));
+            -51},{-140,-51},{-140,-32},{-147,-32}}, color={255,127,0}));
+    connect(booleanToInteger1.u, not1.y) annotation (Line(points={{-170,-32},{
+            -174,-32},{-174,120},{-179.4,120}}, color={255,0,255}));
     connect(booleanToInteger2.u, not1.u) annotation (Line(points={{-42,-268},{
             -200,-268},{-200,120},{-193.2,120}}, color={255,0,255}));
     connect(booleanToInteger2.y, fan6.stage) annotation (Line(points={{-19,-268},
             {0,-268},{0,-72.6},{-12,-72.6}}, color={255,127,0}));
-    connect(conDam.u_s, average6h.Input_average) annotation (Line(points={{12,
-            -240},{12,-166},{68,-166}}, color={0,0,127}));
+    connect(conDam.u_s, average6h.Input_average) annotation (Line(points={{12,-240},
+            {12,-178},{70,-178}},       color={0,0,127}));
     connect(const.y, conDam.u_m) annotation (Line(points={{41,-264},{32,-264},{
             32,-252},{24,-252}}, color={0,0,127}));
     connect(conDam.y, vavDam.y) annotation (Line(points={{35,-240},{48,-240},{
-            48,-206},{-16,-206},{-16,-122}}, color={0,0,127}));
+            48,-206},{-14,-206},{-14,-130}}, color={0,0,127}));
     annotation (Icon(coordinateSystem(preserveAspectRatio=false)), Diagram(
           coordinateSystem(preserveAspectRatio=false)));
   end RBC_ventilation;
@@ -2522,8 +2539,8 @@ First implementation.
           rotation=270,
           origin={-20,42})));
 
-    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium
-        = Medium, borFieDat=
+    IDEAS.Fluid.Geothermal.Borefields.OneUTube borFie(redeclare package Medium =
+          Medium, borFieDat=
           IDEAS.Fluid.Geothermal.Borefields.Data.Borefield.Example(
             filDat=IDEAS.Fluid.Geothermal.Borefields.Data.Filling.Bentonite(
               kFil=0.6,
